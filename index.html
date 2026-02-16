@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chandan Sharma | Full Stack Developer & Founder XEVION</title>
+    <meta name="description" content="Portfolio of Chandan Sharma, Founder of XEVION BYTE. Specializing in School ERP, Websites, and Custom Software Solutions.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #020617; 
+            --card-surface: rgba(30, 41, 59, 0.4);
+            --gold-accent: #fbbf24;
+            --blue-accent: #3b82f6;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-light: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(251, 191, 36, 0.1) 0px, transparent 50%);
+            color: var(--text-main);
+            margin: 0;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 30px; border-bottom: var(--border-light);
+            backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+        }
+        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
+        .brand span { color: var(--blue-accent); }
+        
+        .hire-nav-btn {
+            background: rgba(255,255,255,0.1);
+            color: var(--gold-accent);
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--gold-accent);
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+        .hire-nav-btn:hover { background: var(--gold-accent); color: #000; }
+
+        /* --- HERO SECTION --- */
+        .hero-section { text-align: center; padding: 60px 20px 40px; position: relative; }
+
+        .profile-glow { width: 160px; height: 160px; margin: 0 auto; position: relative; }
+        .profile-glow::before {
+            content: ''; position: absolute; inset: -5px; border-radius: 50%;
+            background: conic-gradient(transparent, var(--gold-accent), transparent);
+            animation: spin 4s linear infinite;
+        }
+        
+        .profile-img {
+            width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+            position: relative; border: 4px solid var(--bg-dark); cursor: zoom-in;
+        }
+
+        .badge-verified {
+            position: absolute; bottom: 5px; right: 5px;
+            background: var(--blue-accent); color: white;
+            width: 35px; height: 35px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; border: 4px solid var(--bg-dark);
+        }
+
+        .hero-name { 
+            font-size: 2.8rem; margin: 20px 0 5px; font-weight: 800; 
+            background: linear-gradient(to right, #fff, #94a3b8);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-title { 
+            color: var(--gold-accent); font-weight: 600; letter-spacing: 2px; 
+            text-transform: uppercase; font-size: 0.9rem; display: block; margin-bottom: 20px;
+        }
+
+        .hero-bio { max-width: 600px; margin: 0 auto; color: var(--text-muted); line-height: 1.6; }
+
+        /* --- STATS BAR --- */
+        .stats-bar {
+            display: flex; justify-content: center; gap: 40px; margin: 40px 0;
+            flex-wrap: wrap;
+        }
+        .stat-item { text-align: center; }
+        .stat-num { font-size: 1.8rem; font-weight: 700; color: white; display: block; }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+
+        /* --- TECH MARQUEE --- */
+        .tech-marquee {
+            background: rgba(255,255,255,0.03); padding: 15px 0;
+            overflow: hidden; white-space: nowrap; position: relative;
+            border-top: var(--border-light); border-bottom: var(--border-light);
+        }
+        .tech-track { display: inline-block; animation: scroll 20s linear infinite; }
+        .tech-item { 
+            display: inline-block; padding: 0 30px; color: var(--text-muted); 
+            font-weight: 600; font-size: 1.1rem; 
+        }
+        .tech-item i { color: var(--blue-accent); margin-right: 8px; }
+
+        /* --- SERVICES / GUARANTEES --- */
+        .section-container { max-width: 1000px; margin: 60px auto; padding: 0 20px; }
+        .section-header { margin-bottom: 40px; text-align: center; }
+        .section-header h2 { font-size: 2rem; margin: 0; }
+        .section-header p { color: var(--text-muted); margin-top: 10px; }
+
+        .guarantee-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .g-card {
+            background: var(--card-surface); padding: 30px; border-radius: 20px;
+            border: var(--border-light); transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .g-card:hover { transform: translateY(-5px); border-color: var(--gold-accent); }
+        
+        .g-icon { 
+            width: 50px; height: 50px; background: rgba(251, 191, 36, 0.1); 
+            color: var(--gold-accent); border-radius: 12px; display: flex; 
+            align-items: center; justify-content: center; font-size: 1.2rem; margin-bottom: 20px;
+        }
+        .g-card h3 { margin: 0 0 10px; font-size: 1.2rem; }
+        .g-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin: 0; }
+        .highlight-text { color: var(--text-main); font-weight: 600; }
+
+        /* --- REVIEWS --- */
+        .reviews-section { padding: 20px 20px 60px; max-width: 1000px; margin: 0 auto; }
+        .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .review-card {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 25px; border-radius: 20px; transition: 0.3s;
+        }
+        .review-card:hover {
+            background: rgba(255, 255, 255, 0.06); transform: translateY(-5px); border-color: var(--blue-accent);
+        }
+        .review-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .client-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--gold-accent); }
+        .client-name { margin: 0; color: white; font-size: 1rem; }
+        .client-role { color: var(--text-muted); font-size: 0.8rem; }
+        .stars { margin-left: auto; color: var(--gold-accent); letter-spacing: 2px; }
+        .review-text { color: #cbd5e1; font-style: italic; font-size: 0.95rem; line-height: 1.6; margin: 0; }
+
+        /* --- FAB & LIGHTBOX --- */
+        .fab-container {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 1000; display: flex; gap: 15px; width: 90%; max-width: 400px;
+        }
+        .action-btn {
+            flex: 1; padding: 15px; border-radius: 50px; text-align: center;
+            text-decoration: none; font-weight: 600; display: flex; 
+            align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .btn-whatsapp { background: #25D366; color: white; }
+        .btn-call { background: #1e293b; color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .action-btn:hover { transform: translateY(-3px); }
+
+        .lightbox {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999;
+            display: none; justify-content: center; align-items: center; flex-direction: column;
+        }
+        .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 10px; border: 2px solid var(--gold-accent); }
+        .close-lb { margin-top: 20px; color: white; cursor: pointer; border: 1px solid #555; padding: 8px 20px; border-radius: 30px; }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        @media (max-width: 600px) {
+            .hero-name { font-size: 2.2rem; }
+            .stats-bar { gap: 20px; }
+            .g-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="brand">XEVION <span>BYTE</span></div>
+        <a href="https://wa.me/919693776982" class="hire-nav-btn">Start a Project</a>
+    </nav>
+
+    <header class="hero-section">
+        <div class="profile-glow">
+            <img src="chandan.jpg" alt="Chandan Sharma" class="profile-img" onclick="openLightbox(this)" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4140/4140048.png'">
+            <div class="badge-verified"><i class="fas fa-check"></i></div>
+        </div>
+
+        <h1 class="hero-name">Mr.Chandan Sharma</h1>
+        <span class="hero-title">Founder & Lead Developer</span>
+        
+        <p class="hero-bio">
+            Transforming ideas into high-performance digital reality. 
+            Specializing in <strong>School ERPs</strong>, <strong>Corporate Websites</strong>, and <strong>Custom Apps</strong>. 
+            We don't just write code; we build businesses.
+        </p>
+
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-num">10+</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num">4.9</span>
+                <span class="stat-label">Rating</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-num">24/7</span>
+                <span class="stat-label">Support</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="tech-marquee">
+        <div class="tech-track">
+            <span class="tech-item"><i class="fab fa-html5"></i> HTML5</span>
+            <span class="tech-item"><i class="fab fa-css3-alt"></i> CSS3</span>
+            <span class="tech-item"><i class="fab fa-js"></i> JavaScript</span>
+            <span class="tech-item"><i class="fas fa-fire"></i> Firebase</span>
+            <span class="tech-item"><i class="fab fa-react"></i> React JS</span>
+            <span class="tech-item"><i class="fab fa-android"></i> Android App</span>
+            <span class="tech-item"><i class="fas fa-server"></i> Cloud Server</span>
+            <span class="tech-item"><i class="fab fa-html5"></i> HTML5</span>
+            <span class="tech-item"><i class="fab fa-css3-alt"></i> CSS3</span>
+            <span class="tech-item"><i class="fab fa-js"></i> JavaScript</span>
+            <span class="tech-item"><i class="fas fa-fire"></i> Firebase</span>
+            <span class="tech-item"><i class="fab fa-react"></i> React JS</span>
+        </div>
+    </div>
+
+    <div class="section-container">
+        <div class="section-header">
+            <h2>Why Clients Trust XEVION</h2>
+            <p>Transparency, Quality, and Speed - The XEVION Promise.</p>
+        </div>
+
+        <div class="guarantee-grid">
+            <div class="g-card">
+                <div class="g-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+                <h3>Flexible Payments</h3>
+                <p>We work on a secure <span class="highlight-text">50% Advance Model</span>. The project starts immediately, and the remaining 50% is payable only after your full satisfaction upon delivery.</p>
+            </div>
+
+            <div class="g-card">
+                <div class="g-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>6 Months Premium Support</h3>
+                <p>Relax! Your website comes with <span class="highlight-text">Free Technical Support</span> for 6 months. Minor changes, bug fixes, or server issues? We handle it all.</p>
+            </div>
+
+            <div class="g-card">
+                <div class="g-icon"><i class="fas fa-bolt"></i></div>
+                <h3>Lightning Fast Delivery</h3>
+                <p>Time is money. We deliver standard School Websites in <span class="highlight-text">7-10 Days</span> and complete ERP Systems within <span class="highlight-text">15-20 Days</span>.</p>
+            </div>
+
+            <div class="g-card">
+                <div class="g-icon"><i class="fas fa-lock"></i></div>
+                <h3>Bank-Grade Security</h3>
+                <p>Your data is hosted on <span class="highlight-text">Google Cloud/AWS</span> servers. We ensure end-to-end encryption so your student data is 100% safe.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="reviews-section">
+        <div class="section-header">
+            <h2>Client Testimonials</h2>
+            <p>Don't just take our word for it.</p>
+        </div>
+
+        <div class="reviews-grid">
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="client-avatar">
+                    <div>
+                        <h4 class="client-name">Bindu P.K</h4>
+                        <span class="client-role">Director, St. Teresa</span>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <p class="review-text">"Mr.Chandan is a genius! He delivered our school ERP in just 15 to 20 days. The fee collection system is very easy to use. Highly recommended!"</p>
+            </div>
+
+            <div class="review-card">
+                <div class="review-header">
+                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" class="client-avatar">
+                    <div>
+                        <h4 class="client-name">Anjali Mishra</h4>
+                        <span class="client-role">Principal, Kids Valley</span>
+                    </div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <p class="review-text">"Best developer in Nalanda. I was worried about data security, but XEVION BYTE handled everything professionally. 10/10 support."</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="text-align: center; color: #555; padding: 40px; font-size: 12px; margin-bottom: 50px;">
+        &copy; <span id="year"></span> XEVION BYTE (Chandan Sharma). All Rights Reserved.<br>
+        <span style="opacity: 0.7;">Made with ❤️ in India</span>
+    </div>
+
+    <div class="fab-container">
+        <a href="https://wa.me/919693776982?text=Hi%20Chandan,%20I%20saw%20your%20portfolio.%20I%20want%20to%20start%20a%20project." class="action-btn btn-whatsapp">
+            <i class="fab fa-whatsapp"></i> Chat
+        </a>
+        <a href="tel:+919693776982" class="action-btn btn-call">
+            <i class="fas fa-phone-alt"></i> Call
+        </a>
+    </div>
+
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <img src="" id="lb-img">
+        <div class="close-lb">Tap to Close</div>
+    </div>
+
+    <script>
+        function openLightbox(el) {
+            document.getElementById('lb-img').src = el.src;
+            document.getElementById('lightbox').style.display = 'flex';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
