@@ -562,6 +562,105 @@
     
     
 
+    <!-- ===== DEV PET SECTION ===== -->
+    <style>
+        .devpet-wrapper {
+            max-width: 480px; margin: 0 auto;
+            background: linear-gradient(160deg, rgba(15,23,42,0.95), rgba(0,0,0,0.9));
+            border: 1px solid rgba(0,210,255,0.2); border-radius: 30px;
+            padding: 36px 32px;
+            box-shadow: 0 0 60px rgba(0,210,255,0.08), 0 0 120px rgba(138,43,226,0.05);
+            position: relative; overflow: hidden;
+        }
+        .devpet-wrapper::before {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px);
+        }
+        .devpet-screen {
+            background: #060d18; border: 1px solid rgba(0,210,255,0.15);
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            min-height: 160px; position: relative; margin-bottom: 20px; overflow: hidden;
+        }
+        .devpet-stage-name {
+            font-family: 'Press Start 2P', monospace; font-size: 11px;
+            color: var(--accent-primary); text-align: center; margin-bottom: 4px; letter-spacing: 1px;
+        }
+        .devpet-stage-desc { font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 18px; }
+        .devpet-xp-label { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 6px; }
+        .devpet-xp-bar-outer { height: 10px; background: rgba(0,0,0,0.5); border: 1px solid rgba(0,210,255,0.2); border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+        .devpet-xp-bar-inner { height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); border-radius: 4px; transition: width 0.5s ease; box-shadow: 0 0 8px rgba(0,210,255,0.6); }
+        .devpet-total-xp { text-align: center; font-size: 0.65rem; color: rgba(255,255,255,0.25); margin-bottom: 20px; }
+        .devpet-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+        .devpet-stat { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 12px; text-align: center; }
+        .devpet-stat-num { font-size: 1.6rem; font-weight: 800; display: block; text-shadow: 0 0 16px rgba(0,210,255,0.5); margin-bottom: 4px; }
+        .devpet-stat-lbl { font-size: 0.6rem; color: var(--accent-primary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .devpet-btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .devpet-btn { padding: 13px 8px; border-radius: 12px; border: 1px solid; background: transparent; color: white; cursor: pointer; font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 700; transition: all 0.25s ease; text-align: center; }
+        .devpet-btn-commit { border-color: rgba(0,210,255,0.5); color: var(--accent-primary); }
+        .devpet-btn-commit:hover { background: rgba(0,210,255,0.12); box-shadow: 0 0 20px rgba(0,210,255,0.3); transform: translateY(-2px); }
+        .devpet-btn-bug { border-color: rgba(138,43,226,0.5); color: #c084fc; }
+        .devpet-btn-bug:hover { background: rgba(138,43,226,0.12); box-shadow: 0 0 20px rgba(138,43,226,0.3); transform: translateY(-2px); }
+        .devpet-evo-row { display: flex; align-items: center; margin-bottom: 20px; }
+        .devpet-evo-step { flex: 1; text-align: center; font-size: 0.55rem; color: rgba(255,255,255,0.3); padding: 6px 2px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .devpet-evo-step.done { color: var(--accent-primary); }
+        .devpet-evo-step.current { color: white; background: rgba(0,210,255,0.1); border: 1px solid rgba(0,210,255,0.3); border-radius: 6px; }
+        .devpet-evo-sep { width: 10px; height: 1px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+        .devpet-evo-sep.done { background: var(--accent-primary); }
+        .devpet-log-title { font-size: 0.65rem; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+        .devpet-log { background: rgba(0,0,0,0.3); border: 1px solid rgba(0,210,255,0.08); border-radius: 10px; padding: 10px 12px; max-height: 88px; overflow-y: auto; }
+        .devpet-log-row { display: flex; justify-content: space-between; font-size: 0.7rem; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.04); color: rgba(255,255,255,0.5); }
+        .devpet-log-row:last-child { border-bottom: none; }
+        .devpet-log-row.new-entry { color: rgba(255,255,255,0.9); }
+        .devpet-log-xp { font-weight: 700; }
+        .devpet-levelup-banner { position: absolute; top: 14px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary)); color: #000; font-family: 'Press Start 2P', monospace; font-size: 7px; padding: 7px 18px; border-radius: 4px; white-space: nowrap; z-index: 20; box-shadow: 0 0 24px rgba(0,210,255,0.6); }
+        .devpet-reset-btn { display: block; margin: 14px auto 0; background: none; border: none; color: rgba(255,255,255,0.15); font-size: 0.65rem; cursor: pointer; font-family: 'Outfit', sans-serif; letter-spacing: 1px; transition: color 0.2s; }
+        .devpet-reset-btn:hover { color: rgba(255,255,255,0.35); }
+    </style>
+
+    <section class="section-padding reveal" id="devpet-section">
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+        <div class="section-header">
+            <h2>My Dev Companion</h2>
+            <p>Interact with my Dev Companion! Every visitor can grow their own pixel pet. 🐾 Log commits & bug fixes to evolve it!</p>
+        </div>
+        <div class="devpet-wrapper" id="devpet-wrapper">
+            <div id="devpet-levelup" class="devpet-levelup-banner" style="display:none;">★ LEVEL UP! ★</div>
+            <div class="devpet-screen">
+                <canvas id="devpet-canvas" width="128" height="128" style="image-rendering:pixelated;"></canvas>
+            </div>
+            <div class="devpet-stage-name" id="devpet-stage-name">Egg</div>
+            <div class="devpet-stage-desc" id="devpet-stage-desc">Just hatching...</div>
+            <div class="devpet-xp-label">
+                <span>STAGE XP</span><span id="devpet-xp-right">0 / 10</span>
+            </div>
+            <div class="devpet-xp-bar-outer">
+                <div class="devpet-xp-bar-inner" id="devpet-xp-bar" style="width:0%"></div>
+            </div>
+            <div class="devpet-total-xp" id="devpet-total-xp">TOTAL XP: 0</div>
+            <div class="devpet-stats-row">
+                <div class="devpet-stat">
+                    <span class="devpet-stat-num" id="devpet-commits" style="color:var(--accent-primary)">0</span>
+                    <span class="devpet-stat-lbl">🟢 Commits</span>
+                </div>
+                <div class="devpet-stat">
+                    <span class="devpet-stat-num" id="devpet-bugs" style="color:#c084fc">0</span>
+                    <span class="devpet-stat-lbl">🐛 Bugs Fixed</span>
+                </div>
+            </div>
+            <div class="devpet-btn-row">
+                <button class="devpet-btn devpet-btn-commit" onclick="devpetLog('commit')">🟢 Daily Commit<br><small style="opacity:.6;font-size:.65rem">+3 XP</small></button>
+                <button class="devpet-btn devpet-btn-bug" onclick="devpetLog('bug')">🐛 Bug Fixed<br><small style="opacity:.6;font-size:.65rem">+5 XP</small></button>
+            </div>
+            <div class="devpet-evo-row" id="devpet-evo-row"></div>
+            <div id="devpet-log-wrap" style="display:none;">
+                <div class="devpet-log-title">Activity Log</div>
+                <div class="devpet-log" id="devpet-log"></div>
+            </div>
+            <button class="devpet-reset-btn" onclick="devpetReset()">[ Reset Pet ]</button>
+        </div>
+    </section>
+    <!-- ===== END DEV PET ===== -->
+
     <section class="section-padding reveal">
         <div class="section-header">
             <h2>What Clients Say</h2>
@@ -636,7 +735,7 @@
         <div class="social-links">
             <a href="https://wa.me/919693776982" class="social-icon"><i class="fab fa-whatsapp"></i></a>
             <a href="tel:9693776982" class="social-icon"><i class="fas fa-phone"></i></a>
-            <a href="mailto:chandan756596@gmail.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+            <a href="/cdn-cgi/l/email-protection#e7848f8689838689d0d2d1d2ded1a7808a868e8bc984888a" class="social-icon"><i class="fas fa-envelope"></i></a>
             <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
         </div>
         <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 20px; line-height: 1.8;">
@@ -658,7 +757,7 @@
     
     
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // 1. SCROLL REVEAL ANIMATION
         window.addEventListener('scroll', reveal);
         function reveal(){
@@ -738,14 +837,75 @@
         function closeProfile(event) {
             // Agar black overlay ya close button pe click ho tabhi band karo
             if (event.target.id === 'lightbox-modal' || event.target.classList.contains('close-btn')) {
-                document.getElementById('lightbox-modal').style.display = "none";
+                document.getElementById('lightbox-modal').style.display = 'none';
             }
         }
+        </script>
 
-        
-        
-        
-        
+    <script>
+    (function(){
+        var PS=8;
+        var SPRITES={egg:[[0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0],[0,0,0,0,1,1,4,4,1,1,1,1,0,0,0,0],[0,0,0,1,1,4,4,1,1,1,1,1,1,0,0,0],[0,0,1,1,4,1,1,1,1,1,1,1,1,1,0,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,3,1,1,3,1,1,1,1,1,1],[1,1,1,1,1,1,3,1,1,3,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,3,3,1,1,1,1,1,1,1],[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],[0,0,1,1,2,2,2,2,2,2,2,2,1,1,0,0],[0,0,0,1,1,2,2,2,2,2,2,1,1,0,0,0],[0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0]],baby:[[0,0,0,0,0,5,5,5,5,5,5,0,0,0,0,0],[0,0,0,0,5,1,1,4,4,1,1,5,0,0,0,0],[0,0,0,5,1,4,1,1,1,1,4,1,5,0,0,0],[0,0,5,1,1,1,3,3,3,3,1,1,1,5,0,0],[0,0,1,1,1,3,0,3,3,0,3,1,1,1,0,0],[0,0,1,1,1,3,3,3,3,3,3,1,1,1,0,0],[0,0,1,1,1,1,3,3,3,3,1,1,1,1,0,0],[0,0,1,1,1,1,1,5,5,1,1,1,1,1,0,0],[0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0],[0,0,1,1,2,1,1,1,1,1,1,2,1,1,0,0],[0,0,1,2,2,1,1,1,1,1,1,2,2,1,0,0],[0,0,2,2,1,1,1,1,1,1,1,1,2,2,0,0],[0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0],[0,0,0,0,1,1,0,0,0,0,1,1,0,0,0,0],[0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],teen:[[0,0,0,5,5,5,5,5,5,5,5,5,5,0,0,0],[0,0,5,1,1,4,4,4,4,4,4,1,1,5,0,0],[0,5,1,4,1,1,1,1,1,1,1,1,4,1,5,0],[0,5,1,1,1,3,3,1,1,3,3,1,1,1,5,0],[0,1,1,1,3,0,0,3,3,0,0,3,1,1,1,0],[0,1,1,1,3,0,4,3,3,4,0,3,1,1,1,0],[0,1,1,1,3,3,3,3,3,3,3,3,1,1,1,0],[0,1,1,1,1,1,5,5,5,5,1,1,1,1,1,0],[5,1,1,1,1,1,1,1,1,1,1,1,1,1,1,5],[5,1,1,2,1,1,1,1,1,1,1,1,2,1,1,5],[5,1,2,2,1,1,1,1,1,1,1,1,2,2,1,5],[0,2,2,1,1,5,1,1,1,1,5,1,1,2,2,0],[0,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0],[0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],[0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],adult:[[0,5,5,0,0,5,5,5,5,5,5,0,0,5,5,0],[5,1,1,5,5,1,1,4,4,1,1,5,5,1,1,5],[5,1,5,5,1,4,1,1,1,1,4,1,5,5,1,5],[0,5,5,1,1,1,3,3,3,3,1,1,1,5,5,0],[0,1,1,1,3,0,4,0,0,4,0,3,1,1,1,0],[0,1,1,1,3,0,0,3,3,0,0,3,1,1,1,0],[0,1,1,1,1,3,3,3,3,3,3,1,1,1,1,0],[5,1,1,1,1,1,5,5,5,5,1,1,1,1,1,5],[5,1,1,1,5,1,1,1,1,1,1,5,1,1,1,5],[5,1,1,2,5,1,1,1,1,1,1,5,2,1,1,5],[5,1,2,2,1,5,1,1,1,1,5,1,2,2,1,5],[5,2,2,1,1,1,5,1,1,5,1,1,1,2,2,5],[0,0,0,1,1,1,1,5,5,1,1,1,1,0,0,0],[0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0],[0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]],legend:[[5,5,0,5,5,5,5,5,5,5,5,5,5,0,5,5],[5,1,5,1,1,4,4,4,4,4,4,1,1,5,1,5],[5,5,1,4,1,1,1,4,4,1,1,1,4,1,5,5],[0,5,1,1,1,3,3,1,1,3,3,1,1,1,5,0],[5,1,1,3,0,4,0,3,3,0,4,0,3,1,1,5],[5,1,1,3,0,4,3,3,3,3,4,0,3,1,1,5],[5,1,1,1,3,3,5,3,3,5,3,3,1,1,1,5],[5,1,1,1,1,5,5,5,5,5,5,1,1,1,1,5],[5,1,5,1,5,1,1,1,1,1,1,5,1,5,1,5],[5,1,5,2,5,1,1,1,1,1,1,5,2,5,1,5],[5,1,2,2,1,5,1,1,1,1,5,1,2,2,1,5],[5,2,2,5,1,1,5,5,5,5,1,1,5,2,2,5],[5,5,0,1,1,1,1,5,5,1,1,1,1,0,5,5],[0,0,0,1,1,1,0,5,5,0,1,1,1,0,0,0],[0,0,0,2,2,0,0,0,0,0,0,2,2,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]};
+        var STAGES=[
+            {name:'Egg',   sprite:'egg',   xp:10,       desc:'Just hatching...',        body:'#e8d5b7',eye:'#4a3728',acc:'#c8a882'},
+            {name:'Sprout',sprite:'baby',  xp:30,       desc:'Tiny and curious!',       body:'#7ec8a0',eye:'#1a4a2e',acc:'#a8e6c8'},
+            {name:'Coder', sprite:'teen',  xp:60,       desc:'Getting the hang of it.', body:'#56a07a',eye:'#0d3320',acc:'#80c8a0'},
+            {name:'Hacker',sprite:'adult', xp:100,      desc:'A seasoned dev!',         body:'#2d8a5c',eye:'#082818',acc:'#5ab888'},
+            {name:'Legend',sprite:'legend',xp:Infinity, desc:'Maximum power!',          body:'#00c878',eye:'#001a08',acc:'#00ff9f'}
+        ];
+        var s={xp:0,commits:0,bugs:0,log:[]};
+        function load(){try{s.xp=parseInt(localStorage.getItem('dp2_xp')||'0');s.commits=parseInt(localStorage.getItem('dp2_c')||'0');s.bugs=parseInt(localStorage.getItem('dp2_b')||'0');s.log=JSON.parse(localStorage.getItem('dp2_log')||'[]');}catch(e){}}
+        function save(){localStorage.setItem('dp2_xp',s.xp);localStorage.setItem('dp2_c',s.commits);localStorage.setItem('dp2_b',s.bugs);localStorage.setItem('dp2_log',JSON.stringify(s.log.slice(0,20)));}
+        function getSI(){var t=0;for(var i=0;i<STAGES.length;i++){t+=STAGES[i].xp===Infinity?999:STAGES[i].xp;if(s.xp<t)return i;}return STAGES.length-1;}
+        function draw(blink){
+            var c=document.getElementById('devpet-canvas');if(!c)return;
+            var ctx=c.getContext('2d');var si=getSI();var st=STAGES[si];var sp=SPRITES[st.sprite];
+            ctx.clearRect(0,0,128,128);
+            var pal={1:st.body,2:'rgba(0,0,0,0.4)',3:blink?st.body:st.eye,4:'rgba(255,255,255,0.6)',5:st.acc};
+            for(var y=0;y<16;y++){for(var x=0;x<16;x++){var code=sp[y][x];if(!code)continue;ctx.fillStyle=pal[code];ctx.fillRect(x*PS,y*PS,PS,PS);}}
+        }
+        function ui(){
+            var si=getSI();var st=STAGES[si];
+            var xpStart=0;for(var i=0;i<si;i++)xpStart+=STAGES[i].xp===Infinity?0:STAGES[i].xp;
+            var sxp=s.xp-xpStart;var smax=st.xp===Infinity?999:st.xp;
+            var pct=si===STAGES.length-1?100:Math.min(100,(sxp/smax)*100);
+            document.getElementById('devpet-stage-name').textContent=st.name;
+            document.getElementById('devpet-stage-desc').textContent=st.desc;
+            document.getElementById('devpet-xp-right').textContent=si===STAGES.length-1?'★ MAX ★':(sxp+' / '+smax);
+            document.getElementById('devpet-xp-bar').style.width=pct+'%';
+            document.getElementById('devpet-total-xp').textContent='TOTAL XP: '+s.xp;
+            document.getElementById('devpet-commits').textContent=s.commits;
+            document.getElementById('devpet-bugs').textContent=s.bugs;
+            var er=document.getElementById('devpet-evo-row');er.innerHTML='';
+            STAGES.forEach(function(st2,i){
+                var d=document.createElement('div');
+                d.className='devpet-evo-step'+(i<si?' done':i===si?' current':'');
+                d.textContent=(i<si?'✓ ':i===si?'★ ':'○ ')+st2.name.substring(0,4);
+                er.appendChild(d);
+                if(i<STAGES.length-1){var sep=document.createElement('div');sep.className='devpet-evo-sep'+(i<si?' done':'');er.appendChild(sep);}
+            });
+            if(s.log.length>0){
+                document.getElementById('devpet-log-wrap').style.display='block';
+                var lg=document.getElementById('devpet-log');lg.innerHTML='';
+                s.log.slice(0,8).forEach(function(e,idx){
+                    var r=document.createElement('div');r.className='devpet-log-row'+(idx===0?' new-entry':'');
+                    r.innerHTML='<span>'+e.label+'</span><span class="devpet-log-xp" style="color:'+(e.type==='bug'?'#c084fc':'var(--accent-primary)')+'">'+e.xp+' &nbsp;'+e.time+'</span>';
+                    lg.appendChild(r);
+                });
+            }
+        }
+        window.devpetLog=function(type){
+            var oldSI=getSI();
+            if(type==='commit'){s.xp+=3;s.commits++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Daily commit 🟢',xp:'+3',type:'commit'});}
+            else{s.xp+=5;s.bugs++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Bug squashed 🐛',xp:'+5',type:'bug'});}
+            var newSI=getSI();save();ui();draw(false);
+            if(newSI>oldSI){var b=document.getElementById('devpet-levelup');b.style.display='block';setTimeout(function(){b.style.display='none';},2500);}
+        };
+        window.devpetReset=function(){if(!confirm('Reset DevPet? Cannot be undone.'))return;s={xp:0,commits:0,bugs:0,log:[]};save();ui();draw(false);document.getElementById('devpet-log-wrap').style.display='none';};
+        setInterval(function(){draw(true);setTimeout(function(){draw(false);},150);},3500);
+        load();ui();draw(false);
+    })();
     </script>
-</body>
-</html>
+
+    </body>
+    </html>
