@@ -436,6 +436,143 @@
         }
         #back-to-top.visible { opacity: 1; pointer-events: all; }
         #back-to-top:hover { background: rgba(0,210,255,0.18); transform: translateY(-3px); }
+        /* ====== HAMBURGER MENU ====== */
+        .nav-links { display: none; }
+        .hamburger {
+            display: none; flex-direction: column; gap: 5px;
+            cursor: pointer; padding: 5px; z-index: 2000;
+            background: none; border: none;
+        }
+        .hamburger span {
+            display: block; width: 26px; height: 2px;
+            background: var(--text-light); border-radius: 2px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); background: var(--accent-primary); }
+        .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); background: var(--accent-primary); }
+
+        .mobile-menu-overlay {
+            position: fixed; inset: 0; z-index: 1500;
+            background: rgba(2, 6, 23, 0.97);
+            backdrop-filter: blur(24px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+        .mobile-menu-overlay.open { opacity: 1; pointer-events: all; }
+
+        .mobile-menu-overlay a {
+            font-size: 1.6rem; font-weight: 700; color: var(--text-light);
+            text-decoration: none; padding: 14px 40px; border-radius: 14px;
+            letter-spacing: 1px; transition: all 0.25s ease;
+            transform: translateY(20px); opacity: 0;
+            border: 1px solid transparent;
+        }
+        .mobile-menu-overlay.open a {
+            transform: translateY(0); opacity: 1;
+        }
+        .mobile-menu-overlay a:hover {
+            color: var(--accent-primary);
+            background: rgba(0, 210, 255, 0.07);
+            border-color: rgba(0, 210, 255, 0.2);
+        }
+        /* Staggered animation for menu items */
+        .mobile-menu-overlay a:nth-child(1) { transition-delay: 0.05s; }
+        .mobile-menu-overlay a:nth-child(2) { transition-delay: 0.1s; }
+        .mobile-menu-overlay a:nth-child(3) { transition-delay: 0.15s; }
+        .mobile-menu-overlay a:nth-child(4) { transition-delay: 0.2s; }
+        .mobile-menu-overlay a:nth-child(5) { transition-delay: 0.25s; }
+        .mobile-menu-overlay a:nth-child(6) { transition-delay: 0.3s; }
+        .mobile-menu-cta {
+            margin-top: 20px; padding: 16px 50px !important;
+            background: var(--gradient-box) !important;
+            color: white !important; border-radius: 50px !important;
+            font-size: 1.1rem !important; border: none !important;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-cta-btn { display: none; }
+        }
+
+        /* ====== PRICING TABLE ====== */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; align-items: start;
+        }
+        .pricing-card {
+            background: var(--glass-bg); border: var(--glass-border);
+            border-radius: 25px; padding: 35px 30px;
+            transition: all 0.4s ease; position: relative; overflow: hidden;
+            text-align: center;
+        }
+        .pricing-card:hover { transform: translateY(-8px); }
+        .pricing-card.popular {
+            border: 1px solid rgba(0, 210, 255, 0.4);
+            background: linear-gradient(160deg, rgba(0,210,255,0.06), rgba(138,43,226,0.06));
+            transform: scale(1.04);
+        }
+        .pricing-card.popular:hover { transform: scale(1.04) translateY(-8px); }
+        .popular-badge {
+            position: absolute; top: -1px; left: 50%; transform: translateX(-50%);
+            background: var(--gradient-box); color: white;
+            font-size: 0.7rem; font-weight: 800; letter-spacing: 2px;
+            padding: 6px 22px; border-radius: 0 0 14px 14px;
+            text-transform: uppercase;
+        }
+        .pricing-icon {
+            font-size: 2.2rem; margin-bottom: 15px; margin-top: 10px;
+            background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .pricing-name {
+            font-size: 1.1rem; font-weight: 700; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px;
+        }
+        .pricing-price {
+            font-size: 2.8rem; font-weight: 800; color: var(--text-light); margin-bottom: 5px;
+            line-height: 1;
+        }
+        .pricing-price span { font-size: 1.2rem; font-weight: 500; color: var(--text-muted); }
+        .pricing-subtitle { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 25px; }
+        .pricing-divider {
+            height: 1px; background: rgba(255,255,255,0.07); margin: 20px 0;
+        }
+        .pricing-features { list-style: none; padding: 0; margin: 0 0 30px; text-align: left; }
+        .pricing-features li {
+            display: flex; align-items: center; gap: 10px;
+            padding: 8px 0; font-size: 0.9rem; color: var(--text-muted);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .pricing-features li:last-child { border-bottom: none; }
+        .pricing-features li .check { color: #00ff78; font-size: 0.85rem; flex-shrink: 0; }
+        .pricing-features li .cross { color: #ef4444; font-size: 0.85rem; flex-shrink: 0; }
+        .pricing-features li.active-feat { color: var(--text-light); }
+        .pricing-btn {
+            display: block; width: 100%; padding: 14px;
+            border-radius: 50px; font-weight: 700; font-size: 0.95rem;
+            text-decoration: none; text-align: center; transition: all 0.3s ease;
+            border: 1px solid rgba(0,210,255,0.4); color: var(--accent-primary);
+            background: rgba(0,210,255,0.06);
+        }
+        .pricing-btn:hover { background: rgba(0,210,255,0.15); box-shadow: 0 0 25px rgba(0,210,255,0.25); }
+        .pricing-btn.primary-btn {
+            background: var(--gradient-box); color: white; border: none;
+            box-shadow: 0 0 25px rgba(0,210,255,0.3);
+        }
+        .pricing-btn.primary-btn:hover { box-shadow: 0 0 40px rgba(0,210,255,0.55); transform: scale(1.02); }
+        .pricing-note {
+            text-align: center; margin-top: 30px; color: var(--text-muted); font-size: 0.85rem;
+        }
+        .pricing-note span { color: var(--accent-primary); font-weight: 600; }
+        @media (max-width: 768px) {
+            .pricing-card.popular { transform: scale(1); }
+            .pricing-card.popular:hover { transform: translateY(-8px); }
+        }
+
         /* ====== CLICK PARTICLE BURST ====== */
         .click-particle {
             position: fixed; pointer-events: none; z-index: 99997;
@@ -468,11 +605,26 @@
         <i class="fas fa-chevron-up"></i>
     </a>
 
+    <!-- Mobile Menu Overlay -->
+    <div class="mobile-menu-overlay" id="mobileMenu">
+        <a href="#" onclick="closeMobileMenu()"><i class="fas fa-home" style="margin-right:10px;font-size:1rem;"></i> Home</a>
+        <a href="#services" onclick="closeMobileMenu()"><i class="fas fa-bolt" style="margin-right:10px;font-size:1rem;"></i> Services</a>
+        <a href="#projects" onclick="closeMobileMenu()"><i class="fas fa-code" style="margin-right:10px;font-size:1rem;"></i> Projects</a>
+        <a href="#pricing" onclick="closeMobileMenu()"><i class="fas fa-tags" style="margin-right:10px;font-size:1rem;"></i> Pricing</a>
+        <a href="#reviews" onclick="closeMobileMenu()"><i class="fas fa-star" style="margin-right:10px;font-size:1rem;"></i> Reviews</a>
+        <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20Let%27s%20discuss%20a%20project." target="_blank" class="mobile-menu-cta" onclick="closeMobileMenu()">
+            <i class="fas fa-rocket" style="margin-right:8px;"></i> Start a Project
+        </a>
+    </div>
+
     <nav>
         <div class="brand">XEVION <span>BYTE</span></div>
-        <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20I%20am%20impressed%20by%20your%20portfolio.%20Let's%20discuss%20a%20project." target="_blank" class="nav-cta-btn">
+        <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20I%20am%20impressed%20by%20your%20portfolio.%20Let%27s%20discuss%20a%20project." target="_blank" class="nav-cta-btn">
             Start Project <i class="fas fa-arrow-right"></i>
         </a>
+        <button class="hamburger" id="hamburgerBtn" onclick="toggleMobileMenu()" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
     </nav>
 
     <section class="hero-section">
@@ -537,16 +689,7 @@
             <span><i class="fas fa-fire"></i> Firebase</span>
         </div>
     </div>
-    <section class="section-padding reveal">
-
-    
-    
-    
-    
-    
-    
-    
-
+    <section class="section-padding reveal" id="services">
 
         <div class="section-header">
             <h2>The XEVION Advantage</h2>
@@ -600,7 +743,7 @@
     
     
     
-        <section class="section-padding reveal">
+        <section class="section-padding reveal" id="projects">
         <div class="section-header">
             <h2>Featured Masterpieces</h2>
             <p>Real projects. Real Code. Real Results.</p>
@@ -772,7 +915,7 @@
     </section>
     <!-- ===== END DEV PET ===== -->
 
-    <section class="section-padding reveal">
+    <section class="section-padding reveal" id="reviews">
         <div class="section-header">
             <h2>What Clients Say</h2>
         </div>
@@ -838,6 +981,88 @@
             </button>
         </div>
     </section>
+
+    <!-- ===== PRICING TABLE ===== -->
+    <section class="section-padding reveal" id="pricing">
+        <div class="section-header">
+            <h2>💰 Transparent Pricing</h2>
+            <p>No hidden charges. No surprises. Pick a plan and let's build something great.</p>
+        </div>
+        <div class="pricing-grid">
+
+            <!-- BASIC PLAN -->
+            <div class="pricing-card">
+                <div class="pricing-icon"><i class="fas fa-seedling"></i></div>
+                <div class="pricing-name">Starter</div>
+                <div class="pricing-price">₹4,999 <span>/ project</span></div>
+                <div class="pricing-subtitle">Perfect for small businesses & personal use</div>
+                <div class="pricing-divider"></div>
+                <ul class="pricing-features">
+                    <li class="active-feat"><i class="fas fa-check check"></i> Responsive Website (5 Pages)</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Modern UI Design</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Contact Form Integration</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Mobile Optimized</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> 1 Month Free Support</li>
+                    <li><i class="fas fa-times cross"></i> SEO Optimization</li>
+                    <li><i class="fas fa-times cross"></i> Custom Admin Panel</li>
+                    <li><i class="fas fa-times cross"></i> Payment Gateway</li>
+                </ul>
+                <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20I%20am%20interested%20in%20the%20Starter%20Plan%20(₹4%2C999).%20Let%27s%20discuss!" target="_blank" class="pricing-btn">
+                    <i class="fab fa-whatsapp"></i> Get Started
+                </a>
+            </div>
+
+            <!-- POPULAR PLAN -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">⭐ Most Popular</div>
+                <div class="pricing-icon"><i class="fas fa-rocket"></i></div>
+                <div class="pricing-name">Professional</div>
+                <div class="pricing-price">₹12,999 <span>/ project</span></div>
+                <div class="pricing-subtitle">Best for growing businesses & schools</div>
+                <div class="pricing-divider"></div>
+                <ul class="pricing-features">
+                    <li class="active-feat"><i class="fas fa-check check"></i> Responsive Website (10+ Pages)</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Premium UI + Animations</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> SEO Optimization</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Admin Dashboard</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> WhatsApp Notifications</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> 3 Months Free Support</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Google Analytics</li>
+                    <li><i class="fas fa-times cross"></i> Payment Gateway</li>
+                </ul>
+                <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20I%20am%20interested%20in%20the%20Professional%20Plan%20(₹12%2C999).%20Let%27s%20discuss!" target="_blank" class="pricing-btn primary-btn">
+                    <i class="fab fa-whatsapp"></i> Most Popular — Hire Me
+                </a>
+            </div>
+
+            <!-- PREMIUM PLAN -->
+            <div class="pricing-card">
+                <div class="pricing-icon"><i class="fas fa-crown"></i></div>
+                <div class="pricing-name">Enterprise</div>
+                <div class="pricing-price">Custom <span>/ quote</span></div>
+                <div class="pricing-subtitle">Full-scale ERP, Apps & Complex Systems</div>
+                <div class="pricing-divider"></div>
+                <ul class="pricing-features">
+                    <li class="active-feat"><i class="fas fa-check check"></i> Full ERP / School System</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Android Application</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Payment Gateway</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Advanced Admin Panel</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Auto WhatsApp / Email</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> 6 Months Free Support</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Cloud Hosting Setup</li>
+                    <li class="active-feat"><i class="fas fa-check check"></i> Dedicated Tech Support</li>
+                </ul>
+                <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20I%20need%20an%20Enterprise%20solution.%20Let%27s%20discuss%20the%20requirements!" target="_blank" class="pricing-btn">
+                    <i class="fab fa-whatsapp"></i> Get Custom Quote
+                </a>
+            </div>
+        </div>
+        <p class="pricing-note">
+            <i class="fas fa-shield-alt"></i> &nbsp;
+            All plans include <span>50% advance payment</span> — Pay the rest only when you're 100% satisfied.
+        </p>
+    </section>
+    <!-- ===== END PRICING TABLE ===== -->
 
     <footer>
         <div class="brand" style="font-size: 2rem; margin-bottom: 20px;">XEVION <span>BYTE</span></div>
@@ -1020,6 +1245,26 @@
 
     <!-- ====== EXTRA FEATURES JS ====== -->
     <script>
+    // HAMBURGER MENU
+    function toggleMobileMenu() {
+        var menu = document.getElementById('mobileMenu');
+        var btn = document.getElementById('hamburgerBtn');
+        menu.classList.toggle('open');
+        btn.classList.toggle('open');
+        document.body.style.overflow = menu.classList.contains('open') ? 'hidden' : '';
+    }
+    function closeMobileMenu() {
+        var menu = document.getElementById('mobileMenu');
+        var btn = document.getElementById('hamburgerBtn');
+        menu.classList.remove('open');
+        btn.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+    // Close menu on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeMobileMenu();
+    });
+
     // 1. SCROLL PROGRESS BAR
     window.addEventListener('scroll', function() {
         var scrollTop = window.scrollY;
