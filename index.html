@@ -356,21 +356,24 @@
             box-shadow: 0 0 10px var(--accent-primary), 0 0 20px var(--accent-secondary);
         }
         /* ====== CUSTOM CURSOR ====== */
-        * { cursor: none !important; }
+        @media (pointer: fine) { * { cursor: none !important; } }
+        @media (pointer: coarse) { #custom-cursor, #cursor-trail { display: none !important; } }
         #custom-cursor {
             position: fixed; width: 12px; height: 12px; border-radius: 50%;
             background: var(--accent-primary);
             box-shadow: 0 0 10px var(--accent-primary), 0 0 20px var(--accent-primary);
             pointer-events: none; z-index: 99999;
             transform: translate(-50%, -50%);
-            transition: transform 0.08s ease;
+            transition: transform 0.08s ease, background 0.2s ease, opacity 0.3s ease;
+            left: -50px; top: -50px; opacity: 0;
         }
         #cursor-trail {
             position: fixed; width: 32px; height: 32px; border-radius: 50%;
             border: 1.5px solid rgba(0,210,255,0.45);
             pointer-events: none; z-index: 99998;
             transform: translate(-50%, -50%);
-            transition: left 0.13s ease, top 0.13s ease, border-color 0.2s;
+            transition: left 0.13s ease, top 0.13s ease, border-color 0.2s, opacity 0.3s ease;
+            left: -50px; top: -50px; opacity: 0;
         }
         /* ====== AVAILABLE FOR WORK BADGE ====== */
         .available-badge {
@@ -1141,75 +1144,111 @@
 
         <div class="timeline-wrapper">
 
-            <!-- Item 1 — Left -->
+            <!-- 1 — Left -->
             <div class="timeline-item" id="tl-1">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">🌱</span>
-                    <div class="timeline-year">2022 — The Beginning</div>
-                    <h3>Coding Ki Duniya Mein Pehla Qadam</h3>
-                    <p>HTML aur CSS se shuruat ki. Pehli website dekhi to mann mein ek hi sawaal — "Ye main bhi bana sakta hun!" Tab se journey shuru.</p>
-                    <span class="timeline-badge">✦ Self Taught</span>
+                    <span class="timeline-emoji">💀</span>
+                    <div class="timeline-year">2019 — The Spark</div>
+                    <h3>"Hacker Banunga!" — Sapna Dekha</h3>
+                    <p>YouTube pe hacking videos dekhi, andar ek aag lagi — "Ye sab main bhi kar sakta hun!" Ek online hacking course join kiya. Shayad yahi woh pehla moment tha jab technology se pyaar hua.</p>
+                    <span class="timeline-badge">🔥 The Dream Begins</span>
                 </div>
             </div>
 
-            <!-- Item 2 — Right -->
+            <!-- 2 — Right -->
             <div class="timeline-item right" id="tl-2">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">⚡</span>
-                    <div class="timeline-year">2023 — First Spark</div>
-                    <h3>JavaScript & React Seekha</h3>
-                    <p>Sirf static pages se aage gaya — JavaScript, React aur Firebase seekha. Dynamic apps banane laga. Har bug ek naya lesson tha!</p>
-                    <span class="timeline-badge">✦ Leveling Up</span>
+                    <span class="timeline-emoji">🐧</span>
+                    <div class="timeline-year">2020 — Thoda Aage Badha</div>
+                    <h3>Termux aur Linux ke Saath Experiments</h3>
+                    <p>Android phone pe Termux install kiya, Linux commands try kiye, kuch scripts chalaye — sab thoda halka-fulka, par curiosity real thi. Na koi guide, na koi mentor — sirf Google aur andaaza.</p>
+                    <span class="timeline-badge">🐚 Terminal Explorer</span>
                 </div>
             </div>
 
-            <!-- Item 3 — Left -->
+            <!-- 3 — Left -->
             <div class="timeline-item" id="tl-3">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">🏆</span>
-                    <div class="timeline-year">2023 — First Win</div>
-                    <h3>Pehla Real Client — St. Teresa School</h3>
-                    <p>St. Teresa English School ke liye poora ERP system banaya — Admit Cards, Results, Fee Management sab kuch. Pehli baar real impact dekha.</p>
-                    <span class="timeline-badge">✦ First Client</span>
+                    <span class="timeline-emoji">🌀</span>
+                    <div class="timeline-year">2021 — Bhatakne Ka Daur</div>
+                    <h3>Raasta Dhundh Raha Tha...</h3>
+                    <p>Hacking se coding ki taraf shift hua — samajh aaya ki real power sirf tools chalane mein nahi, banana seekhne mein hai. Kai cheezein try kiya, kuch kaam aaya kuch nahi — par seekhne ki bhookh barh rahi thi.</p>
+                    <span class="timeline-badge">🔍 Finding Direction</span>
                 </div>
             </div>
 
-            <!-- Item 4 — Right -->
+            <!-- 4 — Right -->
             <div class="timeline-item right" id="tl-4">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">⚖️</span>
-                    <div class="timeline-year">2024 — Growing Fast</div>
-                    <h3>Advocate Portfolio & More Projects</h3>
-                    <p>Advocate Anil Purushottam ka professional portfolio deliver kiya. Android development bhi seekhi. Ek ke baad ek clients aane lage.</p>
-                    <span class="timeline-badge">✦ Multiple Clients</span>
+                    <span class="timeline-emoji">🌐</span>
+                    <div class="timeline-year">2022 — Naye Sire Se Shuruat</div>
+                    <h3>HTML & CSS — Pehla Sahi Qadam</h3>
+                    <p>Is baar serious hokar HTML aur CSS seekhna shuru kiya. Pehla webpage dekha apne browser mein — woh feeling alag hi thi. Roz kuch naya banata, roz kuch naya toot ta, roz kuch naya seekhta. Asli journey yahan se shuru hui.</p>
+                    <span class="timeline-badge">🌱 Real Start</span>
                 </div>
             </div>
 
-            <!-- Item 5 — Left -->
+            <!-- 5 — Left -->
             <div class="timeline-item" id="tl-5">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">🚀</span>
-                    <div class="timeline-year">2025 — The Launch</div>
-                    <h3>XEVION BYTE — Brand Born</h3>
-                    <p>Sirf ek freelancer nahi — ab ek brand. XEVION BYTE launch kiya. Premium digital solutions ka safar officially shuru hua!</p>
-                    <span class="timeline-badge">✦ Brand Launch</span>
+                    <span class="timeline-emoji">🎮</span>
+                    <div class="timeline-year">2023 — Experiment Mode ON</div>
+                    <h3>Python, Mini Games & Small Projects</h3>
+                    <p>Sirf websites se baat nahi bani — Python try kiya, chhote chhote games banaye, small utility tools banaaye. Ek Birthday Reminder app banaya, kuch calculators, logic-based mini projects. Har project ek naya lesson tha!</p>
+                    <span class="timeline-badge">⚡ Building & Breaking</span>
                 </div>
             </div>
 
-            <!-- Item 6 — Right -->
+            <!-- 6 — Right -->
             <div class="timeline-item right" id="tl-6">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">🌟</span>
-                    <div class="timeline-year">2026 — Now & Beyond</div>
-                    <h3>10+ Projects. 4.9★ Rating. Still Building.</h3>
-                    <p>10+ successful projects, 99% client satisfaction. Ab aur bade sapne hain — aur aur schools, businesses aur startups ki digital journey ka hissa banna hai!</p>
-                    <span class="timeline-badge">✦ Ongoing ∞</span>
+                    <span class="timeline-emoji">🚀</span>
+                    <div class="timeline-year">2024 — Pro Level Unlock</div>
+                    <h3>JavaScript, React & Android Seekha</h3>
+                    <p>Ab sirf HTML/CSS nahi — React, Firebase, Node.js aur Android Development mein haath daala. Dynamic apps banane laga. Har bug ek challenge tha, har feature ek jeet. Skills ek dum tez speed se badh rahi thi.</p>
+                    <span class="timeline-badge">🔥 Skills Exploding</span>
+                </div>
+            </div>
+
+            <!-- 7 — Left -->
+            <div class="timeline-item" id="tl-7">
+                <div class="timeline-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <span class="timeline-emoji">⚖️</span>
+                    <div class="timeline-year">2025 — Pehla Real Client</div>
+                    <h3>Advocate Anil Purushottam ka Portfolio</h3>
+                    <p>Pehli baar kisi real client ke liye kaam kiya — Advocate Anil Purushottam ka professional website deliver kiya. Local SEO, trust-building design aur mobile-first layout. Client khush hua, confidence rocket ho gaya!</p>
+                    <span class="timeline-badge">🏆 First Real Client</span>
+                </div>
+            </div>
+
+            <!-- 8 — Right -->
+            <div class="timeline-item right" id="tl-8">
+                <div class="timeline-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <span class="timeline-emoji">🏢</span>
+                    <div class="timeline-year">2025 — Brand Born</div>
+                    <h3>XEVION BYTE — Ek Brand Ki Janam</h3>
+                    <p>Sirf freelancer nahi rehna tha — ek identity chahiye thi. XEVION BYTE ka janm hua. Ab ek naam tha, ek logo tha, ek mission tha — premium digital solutions banana jo logon ki zindagi aasan kar sake.</p>
+                    <span class="timeline-badge">🌟 Brand Launch</span>
+                </div>
+            </div>
+
+            <!-- 9 — Left -->
+            <div class="timeline-item" id="tl-9">
+                <div class="timeline-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <span class="timeline-emoji">🏫</span>
+                    <div class="timeline-year">2026 — Biggest Project Yet</div>
+                    <h3>St. Teresa School ERP — Full Ecosystem</h3>
+                    <p>Ab tak ka sabse bada aur complex project — St. Teresa English School ke liye complete ERP system. Admit Card generation, Exam Results, automatic seating arrangement, Fee Collection, WhatsApp notifications. Real impact, real lives changed.</p>
+                    <span class="timeline-badge">∞ Still Building...</span>
                 </div>
             </div>
 
@@ -1527,11 +1566,12 @@
             if (count === texts.length) { count = 0; }
             currentText = texts[count];
             letter = currentText.slice(0, ++index);
-            document.getElementById('typewriter').textContent = letter;
+            var tw = document.getElementById('typewriter');
+            if (tw) tw.textContent = letter;
             if (letter.length === currentText.length) {
-                count++; index = 0; setTimeout(type, 2000); // Pause at end of word
+                count++; index = 0; setTimeout(type, 2000);
             } else {
-                setTimeout(type, 100); // Typing speed
+                setTimeout(type, 100);
             }
         }());
 
@@ -1568,19 +1608,18 @@
         
                 // --- LIGHTBOX SCRIPT (Add this inside <script>) ---
         function openProfile() {
-            const modal = document.getElementById('lightbox-modal');
-            const targetImg = document.getElementById('lightbox-image');
-            // Original image ka source lelo
-            const originalImgSrc = document.querySelector('.profile-img').src;
-            
-            targetImg.src = originalImgSrc;
+            var modal = document.getElementById('lightbox-modal');
+            var targetImg = document.getElementById('lightbox-image');
+            var profileImg = document.querySelector('.profile-img');
+            if (!modal || !targetImg || !profileImg) return;
+            targetImg.src = profileImg.src;
             modal.style.display = "flex";
         }
 
         function closeProfile(event) {
-            // Agar black overlay ya close button pe click ho tabhi band karo
             if (event.target.id === 'lightbox-modal' || event.target.classList.contains('close-btn')) {
-                document.getElementById('lightbox-modal').style.display = 'none';
+                var modal = document.getElementById('lightbox-modal');
+                if (modal) modal.style.display = 'none';
             }
         }
         </script>
@@ -1612,29 +1651,20 @@
             var xpStart=0;for(var i=0;i<si;i++)xpStart+=STAGES[i].xp===Infinity?0:STAGES[i].xp;
             var sxp=s.xp-xpStart;var smax=st.xp===Infinity?999:st.xp;
             var pct=si===STAGES.length-1?100:Math.min(100,(sxp/smax)*100);
-            document.getElementById('devpet-stage-name').textContent=st.name;
-            document.getElementById('devpet-stage-desc').textContent=st.desc;
-            document.getElementById('devpet-xp-right').textContent=si===STAGES.length-1?'★ MAX ★':(sxp+' / '+smax);
-            document.getElementById('devpet-xp-bar').style.width=pct+'%';
-            document.getElementById('devpet-total-xp').textContent='TOTAL XP: '+s.xp;
-            document.getElementById('devpet-commits').textContent=s.commits;
-            document.getElementById('devpet-bugs').textContent=s.bugs;
-            var er=document.getElementById('devpet-evo-row');er.innerHTML='';
-            STAGES.forEach(function(st2,i){
-                var d=document.createElement('div');
-                d.className='devpet-evo-step'+(i<si?' done':i===si?' current':'');
-                d.textContent=(i<si?'✓ ':i===si?'★ ':'○ ')+st2.name.substring(0,4);
-                er.appendChild(d);
-                if(i<STAGES.length-1){var sep=document.createElement('div');sep.className='devpet-evo-sep'+(i<si?' done':'');er.appendChild(sep);}
-            });
+            function set(id,val,prop){var e=document.getElementById(id);if(e){if(prop==='width')e.style.width=val;else e.textContent=val;}}
+            set('devpet-stage-name',st.name);
+            set('devpet-stage-desc',st.desc);
+            set('devpet-xp-right',si===STAGES.length-1?'★ MAX ★':(sxp+' / '+smax));
+            set('devpet-xp-bar',pct+'%','width');
+            set('devpet-total-xp','TOTAL XP: '+s.xp);
+            set('devpet-commits',s.commits);
+            set('devpet-bugs',s.bugs);
+            var er=document.getElementById('devpet-evo-row');
+            if(er){er.innerHTML='';STAGES.forEach(function(st2,i){var d=document.createElement('div');d.className='devpet-evo-step'+(i<si?' done':i===si?' current':'');d.textContent=(i<si?'✓ ':i===si?'★ ':'○ ')+st2.name.substring(0,4);er.appendChild(d);if(i<STAGES.length-1){var sep=document.createElement('div');sep.className='devpet-evo-sep'+(i<si?' done':'');er.appendChild(sep);}});}
             if(s.log.length>0){
-                document.getElementById('devpet-log-wrap').style.display='block';
-                var lg=document.getElementById('devpet-log');lg.innerHTML='';
-                s.log.slice(0,8).forEach(function(e,idx){
-                    var r=document.createElement('div');r.className='devpet-log-row'+(idx===0?' new-entry':'');
-                    r.innerHTML='<span>'+e.label+'</span><span class="devpet-log-xp" style="color:'+(e.type==='bug'?'#c084fc':'var(--accent-primary)')+'">'+e.xp+' &nbsp;'+e.time+'</span>';
-                    lg.appendChild(r);
-                });
+                var lw=document.getElementById('devpet-log-wrap');var lg=document.getElementById('devpet-log');
+                if(lw)lw.style.display='block';
+                if(lg){lg.innerHTML='';s.log.slice(0,8).forEach(function(e,idx){var r=document.createElement('div');r.className='devpet-log-row'+(idx===0?' new-entry':'');r.innerHTML='<span>'+e.label+'</span><span class="devpet-log-xp" style="color:'+(e.type==='bug'?'#c084fc':'var(--accent-primary)')+'">'+e.xp+' &nbsp;'+e.time+'</span>';lg.appendChild(r);});}
             }
         }
         window.devpetLog=function(type){
@@ -1642,9 +1672,13 @@
             if(type==='commit'){s.xp+=3;s.commits++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Daily commit 🟢',xp:'+3',type:'commit'});}
             else{s.xp+=5;s.bugs++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Bug squashed 🐛',xp:'+5',type:'bug'});}
             var newSI=getSI();save();ui();draw(false);
-            if(newSI>oldSI){var b=document.getElementById('devpet-levelup');b.style.display='block';setTimeout(function(){b.style.display='none';},2500);}
+            if(newSI>oldSI){var b=document.getElementById('devpet-levelup');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},2500);}}
         };
-        window.devpetReset=function(){if(!confirm('Reset DevPet? Cannot be undone.'))return;s={xp:0,commits:0,bugs:0,log:[]};save();ui();draw(false);document.getElementById('devpet-log-wrap').style.display='none';};
+        window.devpetReset=function(){
+            if(!confirm('Reset DevPet? Cannot be undone.'))return;
+            s={xp:0,commits:0,bugs:0,log:[]};save();ui();draw(false);
+            var lw=document.getElementById('devpet-log-wrap');if(lw)lw.style.display='none';
+        };
         setInterval(function(){draw(true);setTimeout(function(){draw(false);},150);},3500);
         load();ui();draw(false);
     })();
@@ -1654,7 +1688,7 @@
     <script>
     // ---- TIMELINE SCROLL ANIMATION ----
     function animateTimeline() {
-        for (var i = 1; i <= 6; i++) {
+        for (var i = 1; i <= 9; i++) {
             var el = document.getElementById('tl-' + i);
             if (!el) continue;
             var rect = el.getBoundingClientRect();
@@ -1763,43 +1797,47 @@
         var scrollTop = window.scrollY;
         var docHeight = document.documentElement.scrollHeight - window.innerHeight;
         var pct = (scrollTop / docHeight) * 100;
-        document.getElementById('scroll-progress-bar').style.width = pct + '%';
-
-        // Back to top visibility
+        var bar = document.getElementById('scroll-progress-bar');
+        if (bar) bar.style.width = pct + '%';
         var btn = document.getElementById('back-to-top');
-        if (scrollTop > 400) btn.classList.add('visible');
-        else btn.classList.remove('visible');
+        if (btn) {
+            if (scrollTop > 400) btn.classList.add('visible');
+            else btn.classList.remove('visible');
+        }
     });
 
     // 2. CUSTOM CURSOR
     var cursor = document.getElementById('custom-cursor');
     var trail  = document.getElementById('cursor-trail');
-    document.addEventListener('mousemove', function(e) {
-        cursor.style.left = e.clientX + 'px';
-        cursor.style.top  = e.clientY + 'px';
-        trail.style.left  = e.clientX + 'px';
-        trail.style.top   = e.clientY + 'px';
-    });
-    document.addEventListener('mousedown', function() {
-        cursor.style.transform = 'translate(-50%,-50%) scale(0.6)';
-    });
-    document.addEventListener('mouseup', function() {
-        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-    });
-    // Hover effect on links/buttons
-    var interactables = document.querySelectorAll('a, button, .premium-card, .devpet-btn');
-    interactables.forEach(function(el) {
-        el.addEventListener('mouseenter', function() {
-            cursor.style.transform = 'translate(-50%,-50%) scale(1.8)';
-            cursor.style.background = 'var(--accent-secondary)';
-            trail.style.borderColor = 'rgba(138,43,226,0.6)';
+    if (cursor && trail) {
+        document.addEventListener('mousemove', function(e) {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top  = e.clientY + 'px';
+            trail.style.left  = e.clientX + 'px';
+            trail.style.top   = e.clientY + 'px';
+            cursor.style.opacity = '1';
+            trail.style.opacity  = '1';
         });
-        el.addEventListener('mouseleave', function() {
+        document.addEventListener('mousedown', function() {
+            cursor.style.transform = 'translate(-50%,-50%) scale(0.6)';
+        });
+        document.addEventListener('mouseup', function() {
             cursor.style.transform = 'translate(-50%,-50%) scale(1)';
-            cursor.style.background = 'var(--accent-primary)';
-            trail.style.borderColor = 'rgba(0,210,255,0.45)';
         });
-    });
+        var interactables = document.querySelectorAll('a, button, .premium-card, .devpet-btn');
+        interactables.forEach(function(el) {
+            el.addEventListener('mouseenter', function() {
+                cursor.style.transform = 'translate(-50%,-50%) scale(1.8)';
+                cursor.style.background = 'var(--accent-secondary)';
+                trail.style.borderColor = 'rgba(138,43,226,0.6)';
+            });
+            el.addEventListener('mouseleave', function() {
+                cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+                cursor.style.background = 'var(--accent-primary)';
+                trail.style.borderColor = 'rgba(0,210,255,0.45)';
+            });
+        });
+    }
 
     // 3. CLICK PARTICLE BURST
     document.addEventListener('click', function(e) {
@@ -2032,19 +2070,22 @@
     </div>
 
     <script>
-    // Close chat when clicking outside
-    document.addEventListener('click', function(e) {
-        if (chatOpen && !document.getElementById('chat-window').contains(e.target) && e.target.id !== 'chat-bubble' && !document.getElementById('chat-bubble').contains(e.target)) {
-            chatOpen = false;
-            document.getElementById('chat-window').classList.remove('open');
-            document.getElementById('chat-bubble-icon').textContent = '🤖';
-            document.getElementById('chat-bubble-icon').style.fontSize = '1.6rem';
-        }
-    });
-
     // ====== CHATBOT BRAIN ======
     var chatOpen = false;
     var notifShown = false;
+
+    // Close chat when clicking outside
+    document.addEventListener('click', function(e) {
+        var win = document.getElementById('chat-window');
+        var bubble = document.getElementById('chat-bubble');
+        if (!win || !bubble) return;
+        if (chatOpen && !win.contains(e.target) && !bubble.contains(e.target)) {
+            chatOpen = false;
+            win.classList.remove('open');
+            var icon = document.getElementById('chat-bubble-icon');
+            if (icon) { icon.textContent = '🤖'; icon.style.fontSize = '1.6rem'; }
+        }
+    });
 
     // Auto open hint after 5 seconds
     setTimeout(function() {
@@ -2058,6 +2099,7 @@
         chatOpen = !chatOpen;
         var win = document.getElementById('chat-window');
         var icon = document.getElementById('chat-bubble-icon');
+        if (!win || !icon) return;
         win.classList.toggle('open', chatOpen);
         icon.textContent = chatOpen ? '✕' : '🤖';
         icon.style.fontSize = chatOpen ? '1.2rem' : '1.6rem';
