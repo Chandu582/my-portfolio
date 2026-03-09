@@ -1726,8 +1726,7 @@
 
     <!-- Chat Bubble Button -->
     <button id="chat-bubble" onclick="toggleChat()" aria-label="Open Chat">
-        <span class="notif-dot"></span>
-        <i class="fas fa-comment-dots" id="chat-bubble-icon"></i>
+        <span id="chat-bubble-icon" style="font-size:1.6rem;">🤖</span>
     </button>
 
     <!-- Chat Window -->
@@ -1773,6 +1772,16 @@
     </div>
 
     <script>
+    // Close chat when clicking outside
+    document.addEventListener('click', function(e) {
+        if (chatOpen && !document.getElementById('chat-window').contains(e.target) && e.target.id !== 'chat-bubble' && !document.getElementById('chat-bubble').contains(e.target)) {
+            chatOpen = false;
+            document.getElementById('chat-window').classList.remove('open');
+            document.getElementById('chat-bubble-icon').textContent = '🤖';
+            document.getElementById('chat-bubble-icon').style.fontSize = '1.6rem';
+        }
+    });
+
     // ====== CHATBOT BRAIN ======
     var chatOpen = false;
     var notifShown = false;
@@ -1789,10 +1798,9 @@
         chatOpen = !chatOpen;
         var win = document.getElementById('chat-window');
         var icon = document.getElementById('chat-bubble-icon');
-        var dot = document.querySelector('#chat-bubble .notif-dot');
         win.classList.toggle('open', chatOpen);
-        icon.className = chatOpen ? 'fas fa-times' : 'fas fa-comment-dots';
-        if (dot) dot.style.display = chatOpen ? 'none' : '';
+        icon.textContent = chatOpen ? '✕' : '🤖';
+        icon.style.fontSize = chatOpen ? '1.2rem' : '1.6rem';
     }
 
     function getTime() {
