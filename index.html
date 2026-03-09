@@ -1556,5 +1556,357 @@
     });
     </script>
 
+    <!-- ====== AI CHATBOT ====== -->
+    <style>
+        /* === CHAT BUBBLE BUTTON === */
+        #chat-bubble {
+            position: fixed; bottom: 170px; right: 30px; z-index: 9100;
+            width: 58px; height: 58px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.5rem; cursor: pointer; border: none;
+            box-shadow: 0 4px 20px rgba(0, 210, 255, 0.5);
+            animation: chat-pulse 2.5s ease infinite;
+            transition: transform 0.2s ease;
+        }
+        #chat-bubble:hover { transform: scale(1.12); }
+        @keyframes chat-pulse {
+            0%,100% { box-shadow: 0 4px 20px rgba(0,210,255,0.5); }
+            50%      { box-shadow: 0 4px 35px rgba(0,210,255,0.85), 0 0 0 8px rgba(0,210,255,0.1); }
+        }
+        /* Notification dot */
+        #chat-bubble .notif-dot {
+            position: absolute; top: 2px; right: 2px;
+            width: 14px; height: 14px; border-radius: 50%;
+            background: #ff4757; border: 2px solid var(--bg-main);
+            animation: dot-blink 1.5s ease infinite;
+            font-size: 0; display: flex; align-items: center; justify-content: center;
+        }
+
+        /* === CHAT WINDOW === */
+        #chat-window {
+            position: fixed; bottom: 100px; right: 25px; z-index: 9200;
+            width: 360px; max-height: 520px;
+            background: linear-gradient(160deg, #0d1929, #050c17);
+            border: 1px solid rgba(0,210,255,0.2);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(0,210,255,0.08);
+            display: flex; flex-direction: column;
+            overflow: hidden;
+            opacity: 0; pointer-events: none; transform: translateY(20px) scale(0.95);
+            transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+            transform-origin: bottom right;
+        }
+        #chat-window.open {
+            opacity: 1; pointer-events: all; transform: translateY(0) scale(1);
+        }
+
+        /* Header */
+        .chat-header {
+            background: linear-gradient(135deg, rgba(0,210,255,0.15), rgba(138,43,226,0.15));
+            border-bottom: 1px solid rgba(0,210,255,0.12);
+            padding: 16px 18px; display: flex; align-items: center; gap: 12px;
+        }
+        .chat-header-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--gradient-box);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0; position: relative;
+        }
+        .chat-header-avatar::after {
+            content: ''; position: absolute; bottom: 1px; right: 1px;
+            width: 10px; height: 10px; border-radius: 50%;
+            background: #00ff78; border: 2px solid #050c17;
+        }
+        .chat-header-info { flex: 1; }
+        .chat-header-name { font-weight: 700; font-size: 0.95rem; color: white; }
+        .chat-header-status { font-size: 0.72rem; color: #00ff78; display: flex; align-items: center; gap: 5px; }
+        .chat-header-status::before {
+            content: ''; width: 6px; height: 6px; border-radius: 50%;
+            background: #00ff78; display: inline-block;
+            animation: dot-blink 1.2s ease infinite;
+        }
+        .chat-close-btn {
+            background: rgba(255,255,255,0.07); border: none; color: var(--text-muted);
+            width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+            font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s ease;
+        }
+        .chat-close-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+        /* Messages */
+        .chat-messages {
+            flex: 1; overflow-y: auto; padding: 16px;
+            display: flex; flex-direction: column; gap: 10px;
+            max-height: 300px; scroll-behavior: smooth;
+        }
+        .chat-messages::-webkit-scrollbar { width: 4px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background: rgba(0,210,255,0.2); border-radius: 2px; }
+
+        /* Message bubbles */
+        .msg { max-width: 82%; display: flex; flex-direction: column; gap: 3px; }
+        .msg.bot { align-self: flex-start; }
+        .msg.user { align-self: flex-end; }
+        .msg-bubble {
+            padding: 10px 14px; border-radius: 16px; font-size: 0.88rem; line-height: 1.5;
+        }
+        .msg.bot .msg-bubble {
+            background: rgba(0,210,255,0.08); border: 1px solid rgba(0,210,255,0.15);
+            color: var(--text-light); border-radius: 4px 16px 16px 16px;
+        }
+        .msg.user .msg-bubble {
+            background: linear-gradient(135deg, rgba(0,210,255,0.25), rgba(138,43,226,0.25));
+            border: 1px solid rgba(0,210,255,0.2);
+            color: white; border-radius: 16px 4px 16px 16px;
+        }
+        .msg-time { font-size: 0.65rem; color: var(--text-muted); padding: 0 4px; }
+        .msg.user .msg-time { text-align: right; }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: none; align-self: flex-start;
+            background: rgba(0,210,255,0.08); border: 1px solid rgba(0,210,255,0.15);
+            padding: 10px 16px; border-radius: 4px 16px 16px 16px; gap: 4px;
+            align-items: center;
+        }
+        .typing-indicator.show { display: flex; }
+        .typing-indicator span {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: var(--accent-primary); display: block;
+            animation: typing-bounce 1.2s ease infinite;
+        }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing-bounce {
+            0%,60%,100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        /* Quick reply chips */
+        .quick-chips {
+            padding: 0 16px 10px; display: flex; flex-wrap: wrap; gap: 7px;
+        }
+        .chip {
+            padding: 6px 12px; border-radius: 50px; font-size: 0.77rem; font-weight: 600;
+            background: rgba(0,210,255,0.06); border: 1px solid rgba(0,210,255,0.2);
+            color: var(--accent-primary); cursor: pointer; transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .chip:hover { background: rgba(0,210,255,0.15); transform: translateY(-2px); }
+
+        /* Input bar */
+        .chat-input-bar {
+            padding: 12px 14px; border-top: 1px solid rgba(255,255,255,0.06);
+            display: flex; gap: 10px; align-items: center;
+            background: rgba(0,0,0,0.2);
+        }
+        #chat-input {
+            flex: 1; background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
+            padding: 10px 16px; color: white; font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem; outline: none; transition: border 0.2s ease;
+        }
+        #chat-input::placeholder { color: var(--text-muted); }
+        #chat-input:focus { border-color: rgba(0,210,255,0.4); }
+        #chat-send-btn {
+            width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+            background: var(--gradient-box); border: none; cursor: pointer;
+            color: white; font-size: 0.95rem; display: flex;
+            align-items: center; justify-content: center; transition: 0.2s ease;
+        }
+        #chat-send-btn:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(0,210,255,0.4); }
+
+        /* Mobile */
+        @media (max-width: 480px) {
+            #chat-window { width: calc(100vw - 20px); right: 10px; bottom: 90px; }
+            #chat-bubble { bottom: 160px; right: 20px; }
+        }
+    </style>
+
+    <!-- Chat Bubble Button -->
+    <button id="chat-bubble" onclick="toggleChat()" aria-label="Open Chat">
+        <span class="notif-dot"></span>
+        <i class="fas fa-comment-dots" id="chat-bubble-icon"></i>
+    </button>
+
+    <!-- Chat Window -->
+    <div id="chat-window">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="chat-header-avatar">🤖</div>
+            <div class="chat-header-info">
+                <div class="chat-header-name">XEVION Assistant</div>
+                <div class="chat-header-status">Online — Powered by Chandan</div>
+            </div>
+            <button class="chat-close-btn" onclick="toggleChat()"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages" id="chat-messages">
+            <div class="msg bot">
+                <div class="msg-bubble">👋 Namaste! Main <strong>XEVION Assistant</strong> hun.<br><br>Chandan ke baare mein kuch bhi poochho — services, pricing, projects, ya contact! 🚀</div>
+                <div class="msg-time">Just now</div>
+            </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typing-indicator">
+            <span></span><span></span><span></span>
+        </div>
+
+        <!-- Quick reply chips -->
+        <div class="quick-chips" id="quick-chips">
+            <span class="chip" onclick="askChip('💰 Pricing kya hai?')">💰 Pricing</span>
+            <span class="chip" onclick="askChip('🛠️ Kya services dete ho?')">🛠️ Services</span>
+            <span class="chip" onclick="askChip('⏱️ Kitne time mein banate ho?')">⏱️ Timeline</span>
+            <span class="chip" onclick="askChip('📞 Contact kaise karein?')">📞 Contact</span>
+            <span class="chip" onclick="askChip('🏆 Projects dikhao')">🏆 Projects</span>
+            <span class="chip" onclick="askChip('🔧 Tech stack kya use karte ho?')">🔧 Tech Stack</span>
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input-bar">
+            <input type="text" id="chat-input" placeholder="Kuch bhi poochho..." onkeydown="if(event.key==='Enter') sendChat()">
+            <button id="chat-send-btn" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+    // ====== CHATBOT BRAIN ======
+    var chatOpen = false;
+    var notifShown = false;
+
+    // Auto open hint after 5 seconds
+    setTimeout(function() {
+        if (!notifShown && !chatOpen) {
+            showBotMessage("👀 Koi sawaal hai? Main yahan hun!");
+            notifShown = true;
+        }
+    }, 5000);
+
+    function toggleChat() {
+        chatOpen = !chatOpen;
+        var win = document.getElementById('chat-window');
+        var icon = document.getElementById('chat-bubble-icon');
+        var dot = document.querySelector('#chat-bubble .notif-dot');
+        win.classList.toggle('open', chatOpen);
+        icon.className = chatOpen ? 'fas fa-times' : 'fas fa-comment-dots';
+        if (dot) dot.style.display = chatOpen ? 'none' : '';
+    }
+
+    function getTime() {
+        return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    }
+
+    function showBotMessage(text, delay) {
+        delay = delay || 0;
+        var msgs = document.getElementById('chat-messages');
+        var typing = document.getElementById('typing-indicator');
+        setTimeout(function() {
+            typing.classList.add('show');
+            msgs.scrollTop = msgs.scrollHeight;
+            setTimeout(function() {
+                typing.classList.remove('show');
+                var div = document.createElement('div');
+                div.className = 'msg bot';
+                div.innerHTML = '<div class="msg-bubble">' + text + '</div><div class="msg-time">' + getTime() + '</div>';
+                div.style.opacity = '0'; div.style.transform = 'translateY(8px)';
+                div.style.transition = 'all 0.3s ease';
+                msgs.appendChild(div);
+                msgs.scrollTop = msgs.scrollHeight;
+                setTimeout(function() { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; }, 30);
+            }, 900);
+        }, delay);
+    }
+
+    function showUserMessage(text) {
+        var msgs = document.getElementById('chat-messages');
+        var div = document.createElement('div');
+        div.className = 'msg user';
+        div.innerHTML = '<div class="msg-bubble">' + text + '</div><div class="msg-time">' + getTime() + '</div>';
+        msgs.appendChild(div);
+        msgs.scrollTop = msgs.scrollHeight;
+    }
+
+    function askChip(text) {
+        showUserMessage(text);
+        getBotReply(text);
+    }
+
+    function sendChat() {
+        var input = document.getElementById('chat-input');
+        var text = input.value.trim();
+        if (!text) return;
+        showUserMessage(text);
+        input.value = '';
+        getBotReply(text);
+    }
+
+    function getBotReply(text) {
+        var t = text.toLowerCase();
+
+        // === PRICING ===
+        if (t.match(/price|pricing|cost|kitna|charge|fee|rate|₹|rupee|paisa|bhai kitne/)) {
+            showBotMessage('💰 <strong>Mere 3 Plans hain:</strong><br><br>🌱 <strong>Starter — ₹9,999</strong><br>Basic website, 5 pages, 1 month support<br><br>🚀 <strong>Professional — ₹19,999</strong><br>10+ pages, SEO, Admin Panel, 3 months support<br><br>👑 <strong>Enterprise — Custom Quote</strong><br>Full ERP, Android App, Payment Gateway<br><br><em>50% advance, baaki kaam ke baad!</em> 😊');
+        }
+        // === SERVICES ===
+        else if (t.match(/service|kya karta|kya banata|kya banaate|work|kaam|skill|expertise/)) {
+            showBotMessage('🛠️ <strong>Main ye sab banata hun:</strong><br><br>🏫 School ERP Systems (Admit cards, Results, Fee)<br>🌐 Modern Websites (React, HTML, CSS)<br>📱 Android Applications<br>⚖️ Professional Portfolios<br>🏢 Business Solutions<br><br>Kaunsa chahiye aapko? 😄');
+        }
+        // === TIMELINE ===
+        else if (t.match(/time|kitne din|days|week|month|deliver|deadline|jaldi/)) {
+            showBotMessage('⏱️ <strong>Delivery Timeline:</strong><br><br>🌱 Starter Website → <strong>5-7 din</strong><br>🚀 Professional Site → <strong>10-15 din</strong><br>👑 ERP / App → <strong>30-60 din</strong><br><br>Urgent kaam bhi hota hai — bol do! ⚡');
+        }
+        // === CONTACT ===
+        else if (t.match(/contact|call|whatsapp|phone|number|reach|baat|milna|email/)) {
+            showBotMessage('📞 <strong>Chandan se contact karo:</strong><br><br>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">+91 9693776982</a><br>📧 <strong>Email:</strong> chandansharma@xevionbyte.com<br><br>WhatsApp pe instant reply milta hai! 🟢');
+        }
+        // === PROJECTS ===
+        else if (t.match(/project|portfolio|work|kaam|client|banaya|previous|past|example/)) {
+            showBotMessage('🏆 <strong>Recent Projects:</strong><br><br>🏫 <a href="https://st-teresa-english-school.vercel.app/" target="_blank" style="color:var(--accent-primary)">St. Teresa School ERP</a> — Full school management system<br><br>⚖️ <a href="https://www.advocateanilpurushottam.com/" target="_blank" style="color:var(--accent-primary)">Advocate Anil Portfolio</a> — Legal professional website<br><br>🎂 Birthday Reminder App — Smart JS web app<br><br>Aur bhi hain! WhatsApp karo details ke liye 😊');
+        }
+        // === TECH STACK ===
+        else if (t.match(/tech|stack|language|html|css|react|javascript|node|firebase|android|tool|framework/)) {
+            showBotMessage('🔧 <strong>Mera Tech Arsenal:</strong><br><br>🎨 <strong>Frontend:</strong> HTML5, CSS3, JavaScript, React<br>⚙️ <strong>Backend:</strong> Node.js, Firebase<br>📱 <strong>Mobile:</strong> Android Development<br>🗄️ <strong>Database:</strong> MySQL, Firebase<br>🚀 <strong>Tools:</strong> Git, Vercel, VS Code');
+        }
+        // === ABOUT / WHO ===
+        else if (t.match(/kaun|who|about|kon|chandan|xevion|kahan|where|location/)) {
+            showBotMessage('👨‍💻 <strong>Chandan Sharma</strong> — Founder of XEVION BYTE<br><br>Main ek <strong>Full-Stack Developer</strong> hun jo school ERPs, modern websites aur Android apps banata hun.<br><br>🏆 10+ projects delivered<br>⭐ 4.9/5 client rating<br>🎓 1.5+ years experience<br><br>Koi project hai? Baat karte hain! 🚀');
+        }
+        // === SUPPORT ===
+        else if (t.match(/support|maintenance|help|issue|bug|fix|baad mein|after/)) {
+            showBotMessage('🛡️ <strong>Support Policy:</strong><br><br>🌱 Starter → <strong>1 Month</strong> free support<br>🚀 Professional → <strong>3 Months</strong> free support<br>👑 Enterprise → <strong>6 Months</strong> free support<br><br>Koi bhi bug ya change — bina extra charge ke fix karta hun! 💪');
+        }
+        // === PAYMENT ===
+        else if (t.match(/payment|advance|pay|upi|bank|transfer/)) {
+            showBotMessage('💳 <strong>Payment Process:</strong><br><br>✅ <strong>50% Advance</strong> — kaam shuru karne se pehle<br>✅ <strong>50% Final</strong> — kaam complete hone ke baad<br><br>UPI / Bank Transfer dono accept karta hun.<br>Poora satisfy ho — tabhi final payment! 😊');
+        }
+        // === GREETINGS ===
+        else if (t.match(/^(hi|hello|hey|hii|helo|namaste|namaskar|hy|bhai|bro|helo bhai)/)) {
+            var greets = [
+                '👋 Hello! Kaise hain aap? Main XEVION Assistant hun. Chandan ke baare mein kuch bhi poochho! 😊',
+                '🙏 Namaste! Portfolio mein aapka swagat hai! Kya main kuch help kar sakta hun?',
+                '👋 Hey! Chandan ke saath koi project discuss karna hai? Main help karunga! 🚀'
+            ];
+            showBotMessage(greets[Math.floor(Math.random() * greets.length)]);
+        }
+        // === THANKS ===
+        else if (t.match(/thank|thanks|shukriya|shukriyaa|dhanyawad|ty|thx/)) {
+            showBotMessage('😊 Khushi hui! Koi aur sawaal ho to zaroor poochho.<br><br>Chandan se directly baat karni ho to 👇<br><a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">💬 WhatsApp pe message karo</a>');
+        }
+        // === DEFAULT ===
+        else {
+            var defaults = [
+                '🤔 Samajh nahi aaya bilkul. Neeche chips mein se koi option try karo ya seedha poochho!',
+                '😅 Ye thoda mushkil sawaal hai mere liye! Seedha Chandan se poochho:<br><a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">💬 WhatsApp karo</a>',
+                '🙈 Meri knowledge limited hai! Lekin Chandan se seedha baat karo — wo sab batayenge:<br><a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">💬 +91 9693776982</a>'
+            ];
+            showBotMessage(defaults[Math.floor(Math.random() * defaults.length)]);
+        }
+    }
+    </script>
+    <!-- ====== END AI CHATBOT ====== -->
+
     </body>
     </html>
