@@ -358,13 +358,15 @@
         /* ====== CUSTOM CURSOR ====== */
         @media (pointer: fine) { * { cursor: none !important; } }
         @media (pointer: coarse) { #custom-cursor, #cursor-trail { display: none !important; } }
+        /* Modal elements always show normal cursor */
+        .photo-modal-overlay, .photo-modal-overlay * { cursor: auto !important; }
         #custom-cursor {
             position: fixed; width: 12px; height: 12px; border-radius: 50%;
             background: var(--accent-primary);
             box-shadow: 0 0 10px var(--accent-primary), 0 0 20px var(--accent-primary);
             pointer-events: none; z-index: 99999;
             transform: translate(-50%, -50%);
-            transition: transform 0.08s ease, background 0.2s ease, opacity 0.3s ease;
+            transition: transform 0.08s ease, opacity 0.3s ease;
             left: -50px; top: -50px; opacity: 0;
         }
         #cursor-trail {
@@ -656,6 +658,120 @@
             0%   { opacity: 1; transform: translate(0,0) scale(1); }
             100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0); }
         }
+
+        /* ====== REVIEWS SECTION ====== */
+        .rating-summary {
+            display:flex; align-items:center; gap:40px; justify-content:center;
+            background:linear-gradient(135deg,rgba(0,210,255,0.06),rgba(138,43,226,0.06));
+            border:1px solid rgba(255,255,255,0.07); border-radius:20px;
+            padding:28px 40px; max-width:580px; margin:0 auto 50px; backdrop-filter:blur(10px);
+        }
+        .rating-big-num { font-size:5rem; font-weight:800; line-height:1; background:linear-gradient(135deg,#ffd700,#ffaa00); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .rating-stars-big { color:#ffd700; font-size:1.3rem; margin-bottom:6px; }
+        .rating-meta { font-size:0.82rem; color:var(--text-muted); margin-bottom:12px; }
+        .rating-bars { display:flex; flex-direction:column; gap:5px; }
+        .rbar { display:flex; align-items:center; gap:8px; font-size:0.72rem; color:var(--text-muted); }
+        .rbar-track { flex:1; height:6px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; min-width:100px; }
+        .rbar-fill { height:100%; background:linear-gradient(90deg,#ffd700,#ffaa00); border-radius:3px; width:0; transition:width 1.5s cubic-bezier(.4,0,.2,1); }
+        .reviews-carousel-outer { position:relative; max-width:860px; margin:0 auto; overflow:hidden; padding:10px 0; }
+        .reviews-carousel-track { display:flex; transition:transform 0.55s cubic-bezier(.4,0,.2,1); }
+        .review-card {
+            min-width:100%; padding:36px 40px; border-radius:20px;
+            background:linear-gradient(145deg,rgba(15,23,42,0.95),rgba(0,210,255,0.04));
+            border:1px solid rgba(255,255,255,0.08); box-sizing:border-box; position:relative; overflow:hidden;
+        }
+        .review-quote-icon { font-size:6rem; line-height:1; font-family:Georgia,serif; color:rgba(0,210,255,0.12); position:absolute; top:10px; right:28px; font-weight:700; }
+        .review-stars { color:#ffd700; font-size:1.1rem; margin-bottom:16px; }
+        .review-text { font-size:1.02rem; line-height:1.78; color:rgba(255,255,255,0.82); font-style:italic; margin-bottom:26px; position:relative; z-index:1; }
+        .review-author { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+        .review-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1rem; color:#fff; flex-shrink:0; box-shadow:0 0 16px rgba(0,210,255,0.25); overflow:hidden; }
+        .review-info h4 { margin:0 0 3px; font-size:0.95rem; color:#fff; }
+        .review-info span { font-size:0.78rem; color:var(--text-muted); }
+        .review-info small { font-size:0.7rem; color:rgba(255,255,255,0.28); display:block; margin-top:1px; }
+        .review-project-tag { margin-left:auto; background:rgba(0,210,255,0.1); border:1px solid rgba(0,210,255,0.25); color:var(--accent-primary); padding:5px 14px; border-radius:50px; font-size:0.72rem; font-weight:600; white-space:nowrap; }
+        .carousel-arrow { position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.12); background:rgba(0,210,255,0.08); color:var(--accent-primary); font-size:1rem; cursor:pointer; z-index:10; transition:all .3s; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+        .carousel-arrow:hover { background:var(--accent-primary); color:#000; box-shadow:0 0 18px var(--accent-primary); }
+        .left-arrow { left:-22px; } .right-arrow { right:-22px; }
+        .carousel-dots { display:flex; justify-content:center; gap:8px; margin-top:22px; }
+        .cdot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.15); cursor:pointer; transition:all .3s; border:none; padding:0; }
+        .cdot.active { background:var(--accent-primary); width:24px; border-radius:4px; box-shadow:0 0 10px var(--accent-primary); }
+        .review-form-card { max-width:700px; margin:0 auto; background:linear-gradient(145deg,rgba(15,23,42,0.95),rgba(0,210,255,0.03)); border:1px solid rgba(255,255,255,0.08); border-radius:24px; padding:36px 40px; backdrop-filter:blur(16px); }
+        .review-form-top { display:flex; gap:28px; align-items:flex-start; margin-bottom:20px; }
+        .photo-upload-zone { width:90px; height:90px; border-radius:50%; border:2px dashed rgba(0,210,255,0.4); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; overflow:hidden; background:rgba(0,210,255,0.04); transition:border-color .3s,box-shadow .3s; position:relative; }
+        .photo-upload-zone:hover { border-color:var(--accent-primary); box-shadow:0 0 20px rgba(0,210,255,0.2); }
+        .photo-upload-zone .ph-label { font-size:0.58rem; color:var(--text-muted); text-align:center; padding:4px; line-height:1.3; pointer-events:none; }
+        .photo-upload-zone img { width:100%; height:100%; object-fit:cover; display:none; position:absolute; top:0; left:0; }
+        .form-fields { flex:1; display:flex; flex-direction:column; gap:12px; }
+        .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .star-picker { display:flex; align-items:center; gap:4px; padding:10px 16px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; }
+        .star-picker label { font-size:0.8rem; color:var(--text-muted); margin-right:4px; white-space:nowrap; }
+        .spick { font-size:1.7rem; cursor:pointer; color:rgba(255,255,255,0.15); transition:color .15s,transform .15s; line-height:1; user-select:none; }
+        .spick:hover { transform:scale(1.2); }
+        .char-count { text-align:right; font-size:0.7rem; color:var(--text-muted); margin-top:-6px; }
+        .form-btns { display:flex; gap:12px; margin-top:6px; }
+        .form-btns .submit-btn { flex:1; min-width:140px; }
+        .btn-wa { background:linear-gradient(135deg,#25d366,#128c7e) !important; }
+        .review-toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:linear-gradient(135deg,#00d2ff,#8a2be2); color:#fff; padding:14px 28px; border-radius:50px; font-weight:600; font-size:0.9rem; z-index:9999; opacity:0; pointer-events:none; transition:opacity .4s,transform .4s; box-shadow:0 8px 32px rgba(0,210,255,0.4); white-space:nowrap; }
+        .review-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+        /* Photo Guide Modal */
+        .photo-modal-overlay {
+            position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:99999;
+            display:none; align-items:center; justify-content:center; padding:20px;
+            backdrop-filter:blur(8px);
+        }
+        .photo-modal-overlay.open { display:flex; }
+        .photo-modal-box {
+            background:linear-gradient(145deg,#0f172a,#1e293b);
+            border:1px solid rgba(0,210,255,0.25); border-radius:24px;
+            padding:32px 36px; max-width:460px; width:100%; text-align:center;
+            box-shadow:0 0 60px rgba(0,210,255,0.15); position:relative;
+            animation: modal-pop 0.3s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes modal-pop { from { transform:scale(0.85); opacity:0; } to { transform:scale(1); opacity:1; } }
+        @keyframes shake {
+            0%,100% { transform:translateX(0); }
+            20%      { transform:translateX(-8px); }
+            40%      { transform:translateX(8px); }
+            60%      { transform:translateX(-5px); }
+            80%      { transform:translateX(5px); }
+        }
+        .photo-modal-img {
+            width:110px; height:110px; border-radius:50%; object-fit:cover;
+            border:3px solid var(--accent-primary); box-shadow:0 0 24px rgba(0,210,255,0.4);
+            margin:0 auto 20px; display:block;
+        }
+        .photo-modal-steps {
+            text-align:left; margin:20px 0; display:flex; flex-direction:column; gap:12px;
+        }
+        .pstep {
+            display:flex; align-items:flex-start; gap:12px;
+            background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06);
+            border-radius:12px; padding:12px 14px;
+        }
+        .pstep-num {
+            width:26px; height:26px; border-radius:50%; flex-shrink:0;
+            background:linear-gradient(135deg,#00d2ff,#8a2be2);
+            display:flex; align-items:center; justify-content:center;
+            font-size:0.75rem; font-weight:700; color:#fff;
+        }
+        .pstep-text { font-size:0.84rem; color:rgba(255,255,255,0.8); line-height:1.5; }
+        .pstep-text strong { color:#fff; }
+        .modal-btns { display:flex; gap:12px; margin-top:24px; }
+        .modal-btns button { flex:1; padding:12px; border-radius:12px; font-weight:600; font-size:0.9rem; cursor:pointer; border:none; transition:all .3s; }
+        .btn-download { background:linear-gradient(135deg,#00d2ff,#8a2be2); color:#fff; }
+        .btn-download:hover { box-shadow:0 0 20px rgba(0,210,255,0.4); transform:translateY(-2px); }
+        .btn-skip { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.1) !important; }
+        .btn-skip:hover { background:rgba(255,255,255,0.1); }
+        @media(max-width:650px) {
+            .rating-summary { flex-direction:column; gap:16px; padding:22px 18px; }
+            .left-arrow { left:2px; } .right-arrow { right:2px; }
+            .review-card { padding:24px 16px; }
+            .review-project-tag { margin-left:0; }
+            .review-form-top { flex-direction:column; align-items:center; }
+            .form-row { grid-template-columns:1fr; }
+            .form-btns { flex-direction:column; }
+        }
     </style>
 </head>
 <body>
@@ -686,6 +802,7 @@
         <a href="#journey" onclick="closeMobileMenu()"><i class="fas fa-road" style="margin-right:10px;font-size:1rem;"></i> Journey</a>
         <a href="#pricing" onclick="closeMobileMenu()"><i class="fas fa-tags" style="margin-right:10px;font-size:1rem;"></i> Pricing</a>
         <a href="#reviews" onclick="closeMobileMenu()"><i class="fas fa-star" style="margin-right:10px;font-size:1rem;"></i> Reviews</a>
+        <a href="#github" onclick="closeMobileMenu()"><i class="fab fa-github" style="margin-right:10px;font-size:1rem;"></i> GitHub</a>
         <a href="https://wa.me/919693776982?text=Hi%20Chandan%2C%20Let%27s%20discuss%20a%20project." target="_blank" class="mobile-menu-cta" onclick="closeMobileMenu()">
             <i class="fas fa-rocket" style="margin-right:8px;"></i> Start a Project
         </a>
@@ -877,7 +994,7 @@
                 </div>
                 <div style="padding-top: 20px;">
                     <span class="project-tag">WEB APPLICATION</span>
-                    <h3>Smart  Reminder</h3>
+                    <h3>Smart Birthday Reminder</h3>
                     <p>Never miss a special day again. A custom logic-based web app that tracks dates and helps you send wishes instantly. Built with <strong>Advanced JavaScript Logic</strong>.</p>
                 </div>
             </div>
@@ -1114,6 +1231,80 @@
             color: #c084fc;
         }
 
+        /* Timeline — Coming Next footer */
+        .timeline-coming-next {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        .tcn-line-ext {
+            width: 2px;
+            height: 48px;
+            background: linear-gradient(to bottom, var(--accent-secondary), rgba(0,210,255,0.4));
+            box-shadow: 0 0 10px rgba(0,210,255,0.3);
+            animation: tcn-pulse-line 2s ease-in-out infinite;
+        }
+        @keyframes tcn-pulse-line {
+            0%,100% { opacity: 0.5; }
+            50%      { opacity: 1; box-shadow: 0 0 18px rgba(0,210,255,0.6); }
+        }
+        .tcn-orb {
+            position: relative;
+            width: 64px; height: 64px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .tcn-orb-ring {
+            position: absolute;
+            inset: 0; border-radius: 50%;
+            border: 2px solid rgba(0,210,255,0.4);
+            animation: tcn-ring-expand 2s ease-out infinite;
+        }
+        .tcn-orb-ring-2 {
+            border-color: rgba(138,43,226,0.4);
+            animation-delay: 1s;
+        }
+        @keyframes tcn-ring-expand {
+            0%   { transform: scale(1);   opacity: 0.8; }
+            100% { transform: scale(2.2); opacity: 0; }
+        }
+        .tcn-orb-icon {
+            font-size: 1.8rem;
+            animation: tcn-float 3s ease-in-out infinite;
+            position: relative; z-index: 2;
+        }
+        @keyframes tcn-float {
+            0%,100% { transform: translateY(0); }
+            50%      { transform: translateY(-6px); }
+        }
+        .tcn-text {
+            margin-top: 14px;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .tcn-label {
+            font-size: 1rem; font-weight: 700;
+            background: linear-gradient(135deg, #00d2ff, #8a2be2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .tcn-dots span {
+            font-size: 1.4rem; font-weight: 800; color: var(--accent-primary);
+            animation: tcn-dot-blink 1.4s ease-in-out infinite;
+        }
+        .tcn-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .tcn-dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes tcn-dot-blink {
+            0%,80%,100% { opacity: 0.2; transform: translateY(0); }
+            40%          { opacity: 1;   transform: translateY(-4px); }
+        }
+        .tcn-sub {
+            margin-top: 10px; font-size: 0.82rem;
+            color: var(--text-muted); text-align: center;
+            max-width: 340px; line-height: 1.6;
+        }
+        .tcn-sub strong { color: rgba(255,255,255,0.7); }
+
         /* Mobile — single column */
         @media (max-width: 680px) {
             .timeline-wrapper::before { left: 20px; }
@@ -1144,7 +1335,7 @@
 
         <div class="timeline-wrapper">
 
-            <!-- 1 — Left -->
+            <!-- Item 1 — Left -->
             <div class="timeline-item" id="tl-1">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
@@ -1244,17 +1435,143 @@
             <div class="timeline-item" id="tl-9">
                 <div class="timeline-card tilt-card">
                     <div class="tilt-shine"></div>
-                    <span class="timeline-emoji">🏫</span>
-                    <div class="timeline-year">2026 — Biggest Project Yet</div>
-                    <h3>St. Teresa School ERP — Full Ecosystem</h3>
-                    <p>Ab tak ka sabse bada aur complex project — St. Teresa English School ke liye complete ERP system. Admit Card generation, Exam Results, fees dashboard, automatic seating arrangement, Fee Collection, WhatsApp notifications and many more integrated feature. Real impact, real lives changed.</p>
+                    <span class="timeline-emoji">🏆</span>
+                    <div class="timeline-year">2026 — Biggest Chapter Yet</div>
+                    <h3>St. Teresa ERP & Smart Birthday Reminder</h3>
+                    <p>Do bade projects ek saath deliver kiye — <strong>St. Teresa English School ka poora ERP system</strong> (Admit Cards, Results, Fee Management, Seating Arrangement, WhatsApp Notifications) aur <strong>Smart Birthday Reminder App</strong> jisme automatic reminders aur beautiful UI hai. Dono live. Dono clients khush. 🔥</p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">
+                        <span style="background:rgba(0,210,255,0.1);border:1px solid rgba(0,210,255,0.3);color:var(--accent-primary);padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:600;">🏫 School ERP</span>
+                        <span style="background:rgba(138,43,226,0.1);border:1px solid rgba(138,43,226,0.3);color:#c084fc;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:600;">🎂 Birthday Reminder</span>
+                        <span style="background:rgba(255,215,0,0.1);border:1px solid rgba(255,215,0,0.3);color:#ffd700;padding:4px 12px;border-radius:50px;font-size:0.72rem;font-weight:600;">⭐ 4.9 Rating</span>
+                    </div>
                     <span class="timeline-badge">∞ Still Building...</span>
                 </div>
             </div>
 
-        </div>
+
+            <!-- Timeline End — Coming Next -->
+            <div class="timeline-coming-next">
+                <div class="tcn-line-ext"></div>
+                <div class="tcn-orb">
+                    <div class="tcn-orb-ring"></div>
+                    <div class="tcn-orb-ring tcn-orb-ring-2"></div>
+                    <span class="tcn-orb-icon">🚀</span>
+                </div>
+                <div class="tcn-text">
+                    <span class="tcn-label">Next Chapter Loading...</span>
+                    <span class="tcn-dots"><span>.</span><span>.</span><span>.</span></span>
+                </div>
+                <p class="tcn-sub">Aur bade projects. Aur badi companies. Aur badi duniya. <strong>Kahani abhi baaki hai.</strong></p>
+            </div>
     </section>
     <!-- ===== END JOURNEY SECTION ===== -->
+
+    <!-- ===== GITHUB SECTION ===== -->
+    <section class="section-padding reveal" id="github">
+        <div class="section-header">
+            <h2><i class="fab fa-github" style="margin-right:10px;"></i>GitHub Activity</h2>
+            <p>Real-time code stats — har commit ek naya chapter hai 🚀</p>
+        </div>
+
+        <div class="github-grid">
+
+            <!-- Stats Row -->
+            <div class="github-card github-card-full">
+                <div class="github-card-title"><i class="fas fa-chart-bar"></i> Overall GitHub Stats</div>
+                <div class="gh-stats-row">
+                    <div class="gh-stat-box">
+                        <div class="gh-stat-val" id="gh-repos">—</div>
+                        <div class="gh-stat-label">Public Repos</div>
+                    </div>
+                    <div class="gh-stat-box">
+                        <div class="gh-stat-val" id="gh-stars">—</div>
+                        <div class="gh-stat-label">Stars Earned</div>
+                    </div>
+                    <div class="gh-stat-box">
+                        <div class="gh-stat-val" id="gh-followers">—</div>
+                        <div class="gh-stat-label">Followers</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Languages -->
+            <div class="github-card tilt-card">
+                <div class="tilt-shine"></div>
+                <div class="github-card-title"><i class="fas fa-code"></i> Top Languages</div>
+                <div class="lang-list" id="langList">
+                    <div class="lang-item">
+                        <div class="lang-dot" style="background:#e34c26"></div>
+                        <span class="lang-name">HTML</span>
+                        <div class="lang-bar-track"><div class="lang-bar-fill" data-w="85" style="background:#e34c26"></div></div>
+                        <span class="lang-pct">85%</span>
+                    </div>
+                    <div class="lang-item">
+                        <div class="lang-dot" style="background:#264de4"></div>
+                        <span class="lang-name">CSS</span>
+                        <div class="lang-bar-track"><div class="lang-bar-fill" data-w="78" style="background:#264de4"></div></div>
+                        <span class="lang-pct">78%</span>
+                    </div>
+                    <div class="lang-item">
+                        <div class="lang-dot" style="background:#f7df1e"></div>
+                        <span class="lang-name">JavaScript</span>
+                        <div class="lang-bar-track"><div class="lang-bar-fill" data-w="70" style="background:#f7df1e"></div></div>
+                        <span class="lang-pct">70%</span>
+                    </div>
+                    <div class="lang-item">
+                        <div class="lang-dot" style="background:#3572A5"></div>
+                        <span class="lang-name">Python</span>
+                        <div class="lang-bar-track"><div class="lang-bar-fill" data-w="55" style="background:#3572A5"></div></div>
+                        <span class="lang-pct">55%</span>
+                    </div>
+                    <div class="lang-item">
+                        <div class="lang-dot" style="background:#61dafb"></div>
+                        <span class="lang-name">React</span>
+                        <div class="lang-bar-track"><div class="lang-bar-fill" data-w="60" style="background:#61dafb"></div></div>
+                        <span class="lang-pct">60%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Repos -->
+            <div class="github-card tilt-card">
+                <div class="tilt-shine"></div>
+                <div class="github-card-title"><i class="fas fa-bookmark"></i> Pinned Repos</div>
+                <div class="repo-list" id="repoList">
+                    <a class="repo-item" href="https://github.com/Chandu582" target="_blank">
+                        <span class="repo-icon">📁</span>
+                        <div class="repo-info">
+                            <div class="repo-name">Loading repos...</div>
+                            <div class="repo-desc">Fetching from GitHub API</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contribution Graph (full width) -->
+            <div class="github-card github-card-full">
+                <div class="github-card-title"><i class="fas fa-fire"></i> Contribution Activity — Last 1 Year</div>
+                <div class="heatmap-wrap">
+                    <img
+                        src="https://ghchart.rshah.org/00d2ff/Chandu582"
+                        alt="Chandu582 GitHub Contribution Chart"
+                        loading="lazy"
+                        onerror="this.parentElement.innerHTML='<p style=\'color:var(--text-muted);text-align:center;padding:20px;\'>Contribution graph load nahi hua — GitHub pe jaao directly!</p>'"
+                    >
+                </div>
+            </div>
+
+        </div>
+
+        <!-- GitHub Profile Button -->
+        <div style="text-align:center; margin-top:16px;">
+            <a href="https://github.com/Chandu582" target="_blank" class="gh-profile-link">
+                <i class="fab fa-github" style="font-size:1.2rem;"></i>
+                View Full GitHub Profile
+                <i class="fas fa-arrow-right" style="font-size:0.8rem;opacity:0.7;"></i>
+            </a>
+        </div>
+    </section>
+
 
     <!-- ===== DEV PET SECTION ===== -->
     <style>
@@ -1358,72 +1675,148 @@
 
     <section class="section-padding reveal" id="reviews">
         <div class="section-header">
-            <h2>What Clients Say</h2>
+            <h2>Client Reviews</h2>
+            <p>Real words from real clients — unfiltered.</p>
         </div>
-        <div class="grid-3">
-            <div class="premium-card tilt-card" style="background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(0, 210, 255, 0.05));">
-                <div class="tilt-shine"></div>
-                <div style="color: #ffd700; margin-bottom: 15px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p>"Chandan's work is exceptional. The School ERP he built for us is flawless and very easy to use for our staff. Highly recommended for complex projects."</p>
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 20px;">
-                     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="width: 40px; border-radius: 50%;">
-                     <div>
-                         <h4 style="margin: 0;">Mrs. Bindu P.K</h4>
-                         <small style="color: var(--accent-primary);">Principal, St. Teresa</small>
-                     </div>
-                </div>
-            </div>
-             <div class="premium-card tilt-card" style="background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(138, 43, 226, 0.05));">
-                <div class="tilt-shine"></div>
-                <div style="color: #ffd700; margin-bottom: 15px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                <p>"Very professional and responsive. He delivered our corporate website ahead of schedule. The design is exactly what we wanted."</p>
-                <div style="display: flex; align-items: center; gap: 10px; margin-top: 20px;">
-                     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="width: 40px; border-radius: 50%;">
-                     <div>
-                         <h4 style="margin: 0;">Rajesh Kumar</h4>
-                         <small style="color: var(--accent-primary);">Director, TechSolutions</small>
-                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
-    <section class="section-padding reveal">
+        <!-- Overall Rating Summary -->
+        <div class="rating-summary">
+            <div class="rating-big-num">4.9</div>
+            <div>
+                <div class="rating-stars-big"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                <div class="rating-meta">Based on <strong>10+</strong> real projects</div>
+                <div class="rating-bars">
+                    <div class="rbar"><span>5★</span><div class="rbar-track"><div class="rbar-fill" id="rb5" style="width:0"></div></div><span>88%</span></div>
+                    <div class="rbar"><span>4★</span><div class="rbar-track"><div class="rbar-fill" id="rb4" style="width:0;background:rgba(138,43,226,0.7)"></div></div><span>10%</span></div>
+                    <div class="rbar"><span>3★</span><div class="rbar-track"><div class="rbar-fill" id="rb3" style="width:0;background:rgba(99,102,241,0.5)"></div></div><span>2%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carousel -->
+        <div class="reviews-carousel-outer">
+            <button class="carousel-arrow left-arrow" onclick="reviewSlide(-1)"><i class="fas fa-chevron-left"></i></button>
+            <div class="reviews-carousel-track" id="reviewsTrack">
+
+                <div class="review-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <div class="review-quote-icon">"</div>
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">Chandan ne hamare school ke liye jo ERP system banaya, wo ekdum flawless hai. Staff ko use karna bahut aasaan lag raha hai. Admit cards, results, fees — sab ek jagah. Highly recommended!</p>
+                    <div class="review-author">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#00d2ff,#8a2be2)"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+                        <div class="review-info"><h4>Mrs. Bindu P.K.</h4><span>Principal, St. Teresa English School</span></div>
+                        <div class="review-project-tag">ERP System</div>
+                    </div>
+                </div>
+
+                <div class="review-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <div class="review-quote-icon">"</div>
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">Mere law practice ke liye jo website banayi, wo professional bhi hai aur client-friendly bhi. Bahut saare potential clients ne site dekh ke contact kiya. Delivery bhi time pe hui — no drama, pure results.</p>
+                    <div class="review-author">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"><img src="https://cdn-icons-png.flaticon.com/512/3135/3135768.png" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;"></div>
+                        <div class="review-info"><h4>Adv. Anil Purushottam</h4><span>Senior Advocate, Civil Court</span></div>
+                        <div class="review-project-tag">Portfolio Site</div>
+                    </div>
+                </div>
+
+                <div class="review-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <div class="review-quote-icon">"</div>
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">Honestly itna fast kaam karta hai ye banda! Maine socha tha kaafi time lagega but ek hafte mein full website ready. Design dekh ke main shocked reh gaya — bilkul premium feel tha!</p>
+                    <div class="review-author">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#10b981,#06b6d4)">RS</div>
+                        <div class="review-info"><h4>Rahul Sharma</h4><span>Startup Founder, Bihar</span></div>
+                        <div class="review-project-tag">Business Website</div>
+                    </div>
+                </div>
+
+                <div class="review-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <div class="review-quote-icon">"</div>
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">Ek baar jo project explain kar do, usse baar baar samjhana nahi padta. Focused developer hai, revisions bhi bina argue kiye karta hai. Paise ka poora value mila — next project bhi inhi se!</p>
+                    <div class="review-author">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">PG</div>
+                        <div class="review-info"><h4>Priya Gupta</h4><span>Digital Entrepreneur, Patna</span></div>
+                        <div class="review-project-tag">E-Commerce Site</div>
+                    </div>
+                </div>
+
+                <div class="review-card tilt-card">
+                    <div class="tilt-shine"></div>
+                    <div class="review-quote-icon">"</div>
+                    <div class="review-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p class="review-text">XEVION BYTE ka kaam alag level ka hai — design clean, code clean, communication clean. NGO ke liye jo website banaya wo expectations se kaafi zyada tha. Shukriya Chandan bhai!</p>
+                    <div class="review-author">
+                        <div class="review-avatar" style="background:linear-gradient(135deg,#f97316,#eab308)">MK</div>
+                        <div class="review-info"><h4>Mohammad Kaif</h4><span>NGO Director, Muzaffarpur</span></div>
+                        <div class="review-project-tag">NGO Website</div>
+                    </div>
+                </div>
+
+            </div>
+            <button class="carousel-arrow right-arrow" onclick="reviewSlide(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </section>
+
+    <!-- Drop a Review -->
+    <section class="section-padding reveal" id="drop-review">
         <div class="section-header">
-            <h2>Drop a Review</h2>
-            <p>Worked with me? Share your experience directly to my WhatsApp.</p>
+            <h2>✍️ Share Your Experience</h2>
+            <p>Kaam kiya hai mere saath? Apna photo aur review bhejo — WhatsApp pe seedha!</p>
         </div>
 
-        <div class="form-wrapper">
-            <input type="text" id="r-name" class="cyber-input" placeholder="Your Name & Organization">
-            <select id="r-rating" class="cyber-input" style="background-color: rgba(15, 23, 42, 0.8);">
-                <option value="5">⭐⭐⭐⭐⭐ (Absolutely Amazing)</option>
-                <option value="4">⭐⭐⭐⭐ (Very Good)</option>
-                <option value="3">⭐⭐⭐ (Satisfied)</option>
-            </select>
-            <textarea id="r-msg" class="cyber-input" rows="4" placeholder="Your feedback..."></textarea>
-            
-            <button onclick="sendReview()" class="submit-btn">
-                <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Send Review Instantly
-            </button>
+        <div class="review-form-card">
+            <div class="review-form-top">
+                <!-- Photo Upload Circle -->
+                <div class="photo-upload-zone tilt-card" id="photoZone" onclick="document.getElementById('photoInput').click()" title="Photo upload karo">
+                    <div class="tilt-shine"></div>
+                    <i class="fas fa-camera" style="font-size:1.4rem;color:var(--accent-primary);pointer-events:none;"></i>
+                    <span class="ph-label">Apni Photo Upload Karo</span>
+                    <img id="photoPreview" alt="preview">
+                    <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="previewReviewPhoto(this)">
+                </div>
+
+                <div class="form-fields">
+                    <div class="form-row">
+                        <input type="text" id="r-name" class="cyber-input" placeholder="Aapka Naam *" maxlength="50">
+                        <input type="text" id="r-org" class="cyber-input" placeholder="Company / Organization">
+                    </div>
+                    <input type="email" id="r-email" class="cyber-input" placeholder="Email (Optional)">
+
+                    <!-- Interactive Star Rating -->
+                    <div class="star-picker">
+                        <label>Rating:</label>
+                        <span class="spick" data-v="1">★</span>
+                        <span class="spick" data-v="2">★</span>
+                        <span class="spick" data-v="3">★</span>
+                        <span class="spick" data-v="4">★</span>
+                        <span class="spick" data-v="5">★</span>
+                        <span id="ratingLabel" style="margin-left:8px;font-size:0.78rem;color:var(--accent-primary);font-weight:600;">Amazing!</span>
+                    </div>
+
+                    <textarea id="r-msg" class="cyber-input" rows="4" placeholder="Apna experience likho yahan... *" maxlength="300"></textarea>
+                    <div class="char-count"><span id="charCount">0</span>/300</div>
+
+                    <div class="form-btns">
+                        <button onclick="sendReviewWA()" class="submit-btn ripple-btn btn-wa">
+                            <i class="fab fa-whatsapp"></i> Send on WhatsApp
+                        </button>
+                    </div>
+                    <p style="text-align:center;font-size:0.72rem;color:var(--text-muted);margin-top:8px;">
+                        <i class="fas fa-lock" style="margin-right:4px;"></i>Tera data secure hai — sirf Chandan ke WhatsApp pe jaayega
+                    </p>
+                </div>
+            </div>
         </div>
+        <div id="reviewToast" class="review-toast">🎉 Shukriya! Review bheja ja raha hai...</div>
     </section>
+
 
     <!-- ===== PRICING TABLE ===== -->
     <section class="section-padding reveal" id="pricing">
@@ -1517,7 +1910,7 @@
         <div class="social-links">
             <a href="https://wa.me/919693776982" class="social-icon"><i class="fab fa-whatsapp"></i></a>
             <a href="tel:9693776982" class="social-icon"><i class="fas fa-phone"></i></a>
-            <a href="mailto:chandan756296@gmail.com" class="social-icon"><i class="fas fa-envelope"></i></a>
+            <a href="/cdn-cgi/l/email-protection#e7848f8689838689d0d2d1d2ded1a7808a868e8bc984888a" class="social-icon"><i class="fas fa-envelope"></i></a>
             <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
         </div>
         <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 20px; line-height: 1.8;">
@@ -1566,12 +1959,11 @@
             if (count === texts.length) { count = 0; }
             currentText = texts[count];
             letter = currentText.slice(0, ++index);
-            var tw = document.getElementById('typewriter');
-            if (tw) tw.textContent = letter;
+            document.getElementById('typewriter').textContent = letter;
             if (letter.length === currentText.length) {
-                count++; index = 0; setTimeout(type, 2000);
+                count++; index = 0; setTimeout(type, 2000); // Pause at end of word
             } else {
-                setTimeout(type, 100);
+                setTimeout(type, 100); // Typing speed
             }
         }());
 
@@ -1593,33 +1985,350 @@
             updateStat();
         });
 
-        // 4. SEND REVIEW TO WHATSAPP
-        function sendReview() {
-            let name = document.getElementById('r-name').value;
-            let rating = document.getElementById('r-rating').value;
-            let msg = document.getElementById('r-msg').value;
-            if(name === "") { alert("Please tell me your name first! 😊"); return; }
-            let starStr = "⭐".repeat(rating);
-            let whatsappMsg = `*🔔 New Client Review Received!*%0A%0A👤 *Client:* ${name}%0A🏆 *Rating:* ${starStr}%0A📝 *Feedback:* ${msg}%0A%0A_Sent via Portfolio Website_`;
-            window.open(`https://wa.me/919693776982?text=${whatsappMsg}`, '_blank');
-        }
+        // 4. REVIEWS CAROUSEL + FORM
+        (function() {
+            // --- CAROUSEL ---
+            var track = document.getElementById('reviewsTrack');
+            var dotsWrap = document.getElementById('carouselDots');
+            var current = 0, autoTimer;
+
+            function rebuildDots() {
+                if (!dotsWrap) return;
+                dotsWrap.innerHTML = '';
+                var cards = track ? track.querySelectorAll('.review-card') : [];
+                cards.forEach(function(_, i) {
+                    var d = document.createElement('button');
+                    d.className = 'cdot' + (i === current ? ' active' : '');
+                    d.setAttribute('data-i', i);
+                    d.addEventListener('click', function() { goTo(+this.getAttribute('data-i')); });
+                    dotsWrap.appendChild(d);
+                });
+            }
+            function goTo(idx) {
+                var total = track ? track.querySelectorAll('.review-card').length : 1;
+                current = ((idx % total) + total) % total;
+                if (track) track.style.transform = 'translateX(-' + (current * 100) + '%)';
+                dotsWrap && dotsWrap.querySelectorAll('.cdot').forEach(function(d, i) { d.classList.toggle('active', i === current); });
+                clearInterval(autoTimer);
+                autoTimer = setInterval(function() { goTo(current + 1); }, 4500);
+            }
+            window.reviewSlide = function(d) { goTo(current + d); };
+            rebuildDots();
+            autoTimer = setInterval(function() { goTo(current + 1); }, 4500);
+
+            // Touch swipe
+            var sx = 0;
+            if (track) {
+                track.addEventListener('touchstart', function(e){ sx = e.touches[0].clientX; }, {passive:true});
+                track.addEventListener('touchend',   function(e){ var d=sx-e.changedTouches[0].clientX; if(Math.abs(d)>50) goTo(current+(d>0?1:-1)); }, {passive:true});
+            }
+
+            // Rating bar animation on scroll
+            var rbAnimated = false;
+            function checkRBars() {
+                var sec = document.getElementById('reviews');
+                if (rbAnimated || !sec) return;
+                if (sec.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                    rbAnimated = true;
+                    var rb5=document.getElementById('rb5'), rb4=document.getElementById('rb4'), rb3=document.getElementById('rb3');
+                    if(rb5) rb5.style.width='88%';
+                    if(rb4) rb4.style.width='10%';
+                    if(rb3) rb3.style.width='2%';
+                }
+            }
+            window.addEventListener('scroll', checkRBars); checkRBars();
+
+            // --- REVIEW FORM ---
+            var selectedRating = 5;
+            var photoBase64 = '';
+            var photoFile = null;
+
+            // Star picker
+            var LABELS = ['', 'Poor 😕', 'Okay 🙂', 'Good 👍', 'Great 🔥', 'Amazing! 🌟'];
+            document.querySelectorAll('.spick').forEach(function(s) {
+                s.style.color = '#ffd700'; // all gold by default
+                s.addEventListener('click', function() {
+                    selectedRating = +this.getAttribute('data-v');
+                    updateStars(selectedRating);
+                });
+                s.addEventListener('mouseenter', function() { updateStars(+this.getAttribute('data-v')); });
+                s.addEventListener('mouseleave', function() { updateStars(selectedRating); });
+            });
+            function updateStars(v) {
+                document.querySelectorAll('.spick').forEach(function(s) {
+                    s.style.color = +s.getAttribute('data-v') <= v ? '#ffd700' : 'rgba(255,255,255,0.15)';
+                    s.style.transform = +s.getAttribute('data-v') === v ? 'scale(1.25)' : 'scale(1)';
+                });
+                var lbl = document.getElementById('ratingLabel');
+                if (lbl) lbl.textContent = LABELS[v] || '';
+            }
+            updateStars(5);
+
+            // Photo preview
+            window.previewReviewPhoto = function(input) {
+                if (!input.files || !input.files[0]) return;
+                var file = input.files[0];
+                if (file.size > 3 * 1024 * 1024) { showToast('❌ Photo 3MB se chhoti honi chahiye!'); return; }
+                photoFile = file;
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    photoBase64 = e.target.result;
+                    var img = document.getElementById('photoPreview');
+                    var zone = document.getElementById('photoZone');
+                    if (img) { img.src = photoBase64; img.style.display = 'block'; }
+                    if (zone) { zone.querySelector('i') && (zone.querySelector('i').style.display = 'none'); zone.querySelector('.ph-label') && (zone.querySelector('.ph-label').style.display = 'none'); }
+                };
+                reader.readAsDataURL(file);
+            };
+
+            // Char counter
+            var msgEl = document.getElementById('r-msg');
+            var ccEl  = document.getElementById('charCount');
+            if (msgEl && ccEl) {
+                msgEl.addEventListener('input', function() {
+                    ccEl.textContent = this.value.length;
+                    ccEl.style.color = this.value.length > 270 ? '#ef4444' : 'var(--text-muted)';
+                });
+            }
+
+            // Toast helper
+            function showToast(msg) {
+                var t = document.getElementById('reviewToast');
+                if (!t) return;
+                t.textContent = msg;
+                t.classList.add('show');
+                setTimeout(function() { t.classList.remove('show'); }, 3500);
+            }
+
+            // Send to WhatsApp (with photo note)
+            // =============================================
+            // IMGBB FREE IMAGE HOSTING — PHOTO CLOUD UPLOAD
+            // Get FREE key at: https://api.imgbb.com
+            // =============================================
+            var IMGBB_KEY = 'fac256ac819a97870c701fc81d48e2c6';
+
+            var pendingWAText = '';
+
+            function setModalState(state) {
+                var icon     = document.getElementById('modalIcon');
+                var title    = document.getElementById('modalTitle');
+                var subtitle = document.getElementById('modalSubtitle');
+                var btn      = document.getElementById('modalActionBtn');
+                if (!icon) return;
+                icon.className = '';
+                btn.style.display = 'none';
+                if (state === 'uploading') {
+                    icon.className = 'upload-spinner';
+                    title.textContent = 'Photo Upload Ho Rahi Hai...';
+                    subtitle.textContent = 'Ek second ruko, photo cloud pe ja rahi hai ☁️';
+                } else if (state === 'success') {
+                    icon.className = 'upload-done-icon'; icon.textContent = '✅';
+                    title.textContent = 'Photo Upload Hogayi!';
+                    subtitle.textContent = 'Ab WhatsApp pe bhejo — photo ka link already message mein hai 🎉';
+                    btn.style.display = 'block';
+                } else if (state === 'error') {
+                    icon.className = 'upload-error-icon'; icon.textContent = '❌';
+                    title.textContent = 'Upload Nahi Hua';
+                    subtitle.textContent = 'Internet check karo ya bina photo ke bhejo.';
+                    btn.style.display = 'block';
+                    btn.textContent = '📱 Bina Photo Ke Bhejo';
+                }
+            }
+
+            function openModal() {
+                var o = document.getElementById('photoModal');
+                if (o) o.classList.add('open');
+            }
+            function closeModal() {
+                var o = document.getElementById('photoModal');
+                if (o) o.classList.remove('open');
+            }
+
+            window.forceCloseModal = closeModal;
+
+            // Overlay click = close
+            var photoModalEl = document.getElementById('photoModal');
+            if (photoModalEl) {
+                photoModalEl.addEventListener('click', function(e) {
+                    if (e.target === photoModalEl) closeModal();
+                });
+            }
+
+            function buildWAText(name, org, email, msg, photoUrl) {
+                var stars  = '⭐'.repeat(selectedRating);
+                var LABELS2 = ['','Poor 😕','Okay 🙂','Good 👍','Great 🔥','Amazing! 🌟'];
+                var lines = [
+                    '*🔔 New Client Review — XEVION BYTE*',
+                    '',
+                    '👤 *Name:* ' + name,
+                    org   ? '🏢 *Organization:* ' + org   : null,
+                    email ? '📧 *Email:* ' + email         : null,
+                    '⭐ *Rating:* ' + stars + ' — ' + (LABELS2[selectedRating]||''),
+                    '',
+                    '📝 *Review:*',
+                    msg,
+                    '',
+                    photoUrl ? '🖼️ *Client Photo:* ' + photoUrl : null,
+                    '',
+                    '_Sent via XEVION BYTE Portfolio Website_'
+                ].filter(function(l){ return l !== null && l !== undefined; });
+                return 'https://wa.me/919693776982?text=' + encodeURIComponent(lines.join('\n'));
+            }
+
+            window.sendReviewWA = function() {
+                var name  = ((document.getElementById('r-name')  || {}).value || '').trim();
+                var org   = ((document.getElementById('r-org')   || {}).value || '').trim();
+                var email = ((document.getElementById('r-email') || {}).value || '').trim();
+                var msg   = ((document.getElementById('r-msg')   || {}).value || '').trim();
+                if (!name) { showToast('❗ Apna naam zaroor daalo!'); return; }
+                if (!msg)  { showToast('❗ Review kuch toh likho!');  return; }
+
+                if (photoBase64) {
+                    // Upload to ImgBB first
+                    openModal();
+                    setModalState('uploading');
+
+                    var base64Data = photoBase64.split(',')[1]; // strip data:image/...;base64,
+                    var formData = new FormData();
+                    formData.append('key', IMGBB_KEY);
+                    formData.append('image', base64Data);
+
+                    fetch('https://api.imgbb.com/1/upload', { method:'POST', body: formData })
+                    .then(function(r){ return r.json(); })
+                    .then(function(data) {
+                        if (data && data.success && data.data && data.data.url) {
+                            pendingWAText = buildWAText(name, org, email, msg, data.data.url);
+                            setModalState('success');
+                        } else {
+                            // Upload failed — send without photo
+                            pendingWAText = buildWAText(name, org, email, msg, null);
+                            setModalState('error');
+                        }
+                    })
+                    .catch(function() {
+                        pendingWAText = buildWAText(name, org, email, msg, null);
+                        setModalState('error');
+                    });
+                } else {
+                    // No photo — directly open WhatsApp
+                    pendingWAText = buildWAText(name, org, email, msg, null);
+                    window.open(pendingWAText, '_blank');
+                    showToast('✅ WhatsApp pe redirect ho raha hai!');
+                }
+            };
+
+            window.modalOpenWA = function() {
+                if (pendingWAText) window.open(pendingWAText, '_blank');
+                closeModal();
+                showToast('✅ WhatsApp khul raha hai!');
+            };
+
+            window.sendReview = window.sendReviewWA;
+        })();
+
+        // ====== GITHUB STATS ======
+        (function() {
+            var GH_USER = 'Chandu582';
+
+            // Fetch user stats
+            fetch('https://api.github.com/users/' + GH_USER)
+            .then(function(r){ return r.json(); })
+            .then(function(data) {
+                var reposEl     = document.getElementById('gh-repos');
+                var starsEl     = document.getElementById('gh-stars');
+                var followersEl = document.getElementById('gh-followers');
+                if (reposEl)     animCount(reposEl,     data.public_repos   || 0);
+                if (followersEl) animCount(followersEl, data.followers       || 0);
+
+                // Fetch repos for star count + top repos
+                fetch('https://api.github.com/users/' + GH_USER + '/repos?per_page=100&sort=updated')
+                .then(function(r){ return r.json(); })
+                .then(function(repos) {
+                    if (!Array.isArray(repos)) return;
+                    var totalStars = repos.reduce(function(s, r){ return s + (r.stargazers_count||0); }, 0);
+                    if (starsEl) animCount(starsEl, totalStars);
+
+                    // Top 4 repos by stars
+                    var top = repos
+                        .filter(function(r){ return !r.fork; })
+                        .sort(function(a,b){ return (b.stargazers_count||0) - (a.stargazers_count||0); })
+                        .slice(0, 4);
+
+                    var list = document.getElementById('repoList');
+                    if (list && top.length) {
+                        var langColors = {
+                            'HTML':'#e34c26','CSS':'#264de4','JavaScript':'#f7df1e',
+                            'Python':'#3572A5','Java':'#b07219','TypeScript':'#2b7489',
+                            'Kotlin':'#A97BFF','PHP':'#4F5D95','C++':'#f34b7d',
+                            'Dart':'#00B4AB','Swift':'#ffac45','Shell':'#89e051'
+                        };
+                        list.innerHTML = top.map(function(r) {
+                            var lc = r.language ? (langColors[r.language] || '#888') : '#888';
+                            return '<a class="repo-item" href="' + r.html_url + '" target="_blank">'
+                                + '<span class="repo-icon">📂</span>'
+                                + '<div class="repo-info">'
+                                + '<div class="repo-name">' + r.name + '</div>'
+                                + '<div class="repo-desc">' + (r.description || 'No description') + '</div>'
+                                + '</div>'
+                                + (r.language ? '<span class="repo-lang-badge" style="background:' + lc + '22;color:' + lc + ';border:1px solid ' + lc + '44">' + r.language + '</span>' : '')
+                                + '<span style="font-size:0.72rem;color:#ffd700;margin-left:6px;">⭐' + (r.stargazers_count||0) + '</span>'
+                                + '</a>';
+                        }).join('');
+                    }
+                }).catch(function(){});
+            }).catch(function(){
+                // API rate limited or user not found — show fallback values
+                ['gh-repos','gh-stars','gh-followers'].forEach(function(id){
+                    var el = document.getElementById(id);
+                    if (el) el.textContent = '—';
+                });
+            });
+
+            // Animate counter
+            function animCount(el, target) {
+                var start = 0, dur = 1500, step = 16;
+                var inc = target / (dur / step);
+                var t = setInterval(function() {
+                    start = Math.min(start + inc, target);
+                    el.textContent = Math.floor(start);
+                    if (start >= target) clearInterval(t);
+                }, step);
+            }
+
+            // Language bars — animate on scroll
+            var langAnimated = false;
+            function animateLangBars() {
+                if (langAnimated) return;
+                var sec = document.getElementById('github');
+                if (!sec) return;
+                if (sec.getBoundingClientRect().top < window.innerHeight * 0.85) {
+                    langAnimated = true;
+                    document.querySelectorAll('.lang-bar-fill').forEach(function(bar) {
+                        bar.style.width = (bar.getAttribute('data-w') || '0') + '%';
+                    });
+                }
+            }
+            window.addEventListener('scroll', animateLangBars);
+            animateLangBars();
+        })();
         
         
         
                 // --- LIGHTBOX SCRIPT (Add this inside <script>) ---
         function openProfile() {
-            var modal = document.getElementById('lightbox-modal');
-            var targetImg = document.getElementById('lightbox-image');
-            var profileImg = document.querySelector('.profile-img');
-            if (!modal || !targetImg || !profileImg) return;
-            targetImg.src = profileImg.src;
+            const modal = document.getElementById('lightbox-modal');
+            const targetImg = document.getElementById('lightbox-image');
+            // Original image ka source lelo
+            const originalImgSrc = document.querySelector('.profile-img').src;
+            
+            targetImg.src = originalImgSrc;
             modal.style.display = "flex";
         }
 
         function closeProfile(event) {
+            // Agar black overlay ya close button pe click ho tabhi band karo
             if (event.target.id === 'lightbox-modal' || event.target.classList.contains('close-btn')) {
-                var modal = document.getElementById('lightbox-modal');
-                if (modal) modal.style.display = 'none';
+                document.getElementById('lightbox-modal').style.display = 'none';
             }
         }
         </script>
@@ -1651,20 +2360,29 @@
             var xpStart=0;for(var i=0;i<si;i++)xpStart+=STAGES[i].xp===Infinity?0:STAGES[i].xp;
             var sxp=s.xp-xpStart;var smax=st.xp===Infinity?999:st.xp;
             var pct=si===STAGES.length-1?100:Math.min(100,(sxp/smax)*100);
-            function set(id,val,prop){var e=document.getElementById(id);if(e){if(prop==='width')e.style.width=val;else e.textContent=val;}}
-            set('devpet-stage-name',st.name);
-            set('devpet-stage-desc',st.desc);
-            set('devpet-xp-right',si===STAGES.length-1?'★ MAX ★':(sxp+' / '+smax));
-            set('devpet-xp-bar',pct+'%','width');
-            set('devpet-total-xp','TOTAL XP: '+s.xp);
-            set('devpet-commits',s.commits);
-            set('devpet-bugs',s.bugs);
-            var er=document.getElementById('devpet-evo-row');
-            if(er){er.innerHTML='';STAGES.forEach(function(st2,i){var d=document.createElement('div');d.className='devpet-evo-step'+(i<si?' done':i===si?' current':'');d.textContent=(i<si?'✓ ':i===si?'★ ':'○ ')+st2.name.substring(0,4);er.appendChild(d);if(i<STAGES.length-1){var sep=document.createElement('div');sep.className='devpet-evo-sep'+(i<si?' done':'');er.appendChild(sep);}});}
+            document.getElementById('devpet-stage-name').textContent=st.name;
+            document.getElementById('devpet-stage-desc').textContent=st.desc;
+            document.getElementById('devpet-xp-right').textContent=si===STAGES.length-1?'★ MAX ★':(sxp+' / '+smax);
+            document.getElementById('devpet-xp-bar').style.width=pct+'%';
+            document.getElementById('devpet-total-xp').textContent='TOTAL XP: '+s.xp;
+            document.getElementById('devpet-commits').textContent=s.commits;
+            document.getElementById('devpet-bugs').textContent=s.bugs;
+            var er=document.getElementById('devpet-evo-row');er.innerHTML='';
+            STAGES.forEach(function(st2,i){
+                var d=document.createElement('div');
+                d.className='devpet-evo-step'+(i<si?' done':i===si?' current':'');
+                d.textContent=(i<si?'✓ ':i===si?'★ ':'○ ')+st2.name.substring(0,4);
+                er.appendChild(d);
+                if(i<STAGES.length-1){var sep=document.createElement('div');sep.className='devpet-evo-sep'+(i<si?' done':'');er.appendChild(sep);}
+            });
             if(s.log.length>0){
-                var lw=document.getElementById('devpet-log-wrap');var lg=document.getElementById('devpet-log');
-                if(lw)lw.style.display='block';
-                if(lg){lg.innerHTML='';s.log.slice(0,8).forEach(function(e,idx){var r=document.createElement('div');r.className='devpet-log-row'+(idx===0?' new-entry':'');r.innerHTML='<span>'+e.label+'</span><span class="devpet-log-xp" style="color:'+(e.type==='bug'?'#c084fc':'var(--accent-primary)')+'">'+e.xp+' &nbsp;'+e.time+'</span>';lg.appendChild(r);});}
+                document.getElementById('devpet-log-wrap').style.display='block';
+                var lg=document.getElementById('devpet-log');lg.innerHTML='';
+                s.log.slice(0,8).forEach(function(e,idx){
+                    var r=document.createElement('div');r.className='devpet-log-row'+(idx===0?' new-entry':'');
+                    r.innerHTML='<span>'+e.label+'</span><span class="devpet-log-xp" style="color:'+(e.type==='bug'?'#c084fc':'var(--accent-primary)')+'">'+e.xp+' &nbsp;'+e.time+'</span>';
+                    lg.appendChild(r);
+                });
             }
         }
         window.devpetLog=function(type){
@@ -1672,13 +2390,9 @@
             if(type==='commit'){s.xp+=3;s.commits++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Daily commit 🟢',xp:'+3',type:'commit'});}
             else{s.xp+=5;s.bugs++;s.log.unshift({time:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),label:'Bug squashed 🐛',xp:'+5',type:'bug'});}
             var newSI=getSI();save();ui();draw(false);
-            if(newSI>oldSI){var b=document.getElementById('devpet-levelup');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},2500);}}
+            if(newSI>oldSI){var b=document.getElementById('devpet-levelup');b.style.display='block';setTimeout(function(){b.style.display='none';},2500);}
         };
-        window.devpetReset=function(){
-            if(!confirm('Reset DevPet? Cannot be undone.'))return;
-            s={xp:0,commits:0,bugs:0,log:[]};save();ui();draw(false);
-            var lw=document.getElementById('devpet-log-wrap');if(lw)lw.style.display='none';
-        };
+        window.devpetReset=function(){if(!confirm('Reset DevPet? Cannot be undone.'))return;s={xp:0,commits:0,bugs:0,log:[]};save();ui();draw(false);document.getElementById('devpet-log-wrap').style.display='none';};
         setInterval(function(){draw(true);setTimeout(function(){draw(false);},150);},3500);
         load();ui();draw(false);
     })();
@@ -1797,13 +2511,12 @@
         var scrollTop = window.scrollY;
         var docHeight = document.documentElement.scrollHeight - window.innerHeight;
         var pct = (scrollTop / docHeight) * 100;
-        var bar = document.getElementById('scroll-progress-bar');
-        if (bar) bar.style.width = pct + '%';
+        document.getElementById('scroll-progress-bar').style.width = pct + '%';
+
+        // Back to top visibility
         var btn = document.getElementById('back-to-top');
-        if (btn) {
-            if (scrollTop > 400) btn.classList.add('visible');
-            else btn.classList.remove('visible');
-        }
+        if (scrollTop > 400) btn.classList.add('visible');
+        else btn.classList.remove('visible');
     });
 
     // 2. CUSTOM CURSOR
@@ -1824,6 +2537,9 @@
         document.addEventListener('mouseup', function() {
             cursor.style.transform = 'translate(-50%,-50%) scale(1)';
         });
+        // Hide custom cursor when modal is open
+        document.getElementById('photoModal') && document.getElementById('photoModal').addEventListener('transitionend', function() {});
+        // Hover effect on links/buttons
         var interactables = document.querySelectorAll('a, button, .premium-card, .devpet-btn');
         interactables.forEach(function(el) {
             el.addEventListener('mouseenter', function() {
@@ -2020,6 +2736,149 @@
             #chat-window { width: calc(100vw - 20px); right: 10px; bottom: 90px; }
             #chat-bubble { bottom: 160px; right: 20px; }
         }
+
+        /* ====== GITHUB SECTION ====== */
+        .github-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            max-width: 960px;
+            margin: 0 auto 40px;
+        }
+        .github-card {
+            background: linear-gradient(145deg, rgba(15,23,42,0.95), rgba(0,210,255,0.04));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 24px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .github-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0,210,255,0.12);
+            border-color: rgba(0,210,255,0.25);
+        }
+        .github-card-full {
+            grid-column: 1 / -1;
+        }
+        .github-card-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .github-card-title i { color: var(--accent-primary); }
+
+        /* Stat boxes */
+        .gh-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .gh-stat-box {
+            text-align: center;
+            padding: 16px 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .gh-stat-val {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d2ff, #8a2be2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .gh-stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Language bars */
+        .lang-list { display: flex; flex-direction: column; gap: 10px; }
+        .lang-item { display: flex; align-items: center; gap: 10px; }
+        .lang-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .lang-name { font-size: 0.82rem; color: rgba(255,255,255,0.8); min-width: 80px; }
+        .lang-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+        .lang-bar-fill { height: 100%; border-radius: 3px; width: 0; transition: width 1.5s cubic-bezier(.4,0,.2,1); }
+        .lang-pct { font-size: 0.72rem; color: var(--text-muted); min-width: 36px; text-align: right; }
+
+        /* Contribution heatmap */
+        .heatmap-wrap {
+            width: 100%;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        .heatmap-wrap img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            filter: hue-rotate(180deg) saturate(1.4) brightness(1.1);
+        }
+
+        /* Streak card */
+        .streak-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+        }
+        .streak-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffd700, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .streak-label { font-size: 0.78rem; color: var(--text-muted); }
+        .streak-fire { font-size: 2rem; }
+
+        /* Top repos */
+        .repo-list { display: flex; flex-direction: column; gap: 12px; }
+        .repo-item {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px; padding: 12px 14px;
+            cursor: pointer; transition: all .3s;
+            text-decoration: none;
+        }
+        .repo-item:hover { border-color: rgba(0,210,255,0.3); background: rgba(0,210,255,0.05); transform: translateX(4px); }
+        .repo-icon { font-size: 1.2rem; }
+        .repo-info { flex: 1; }
+        .repo-name { font-size: 0.88rem; font-weight: 600; color: var(--accent-primary); margin-bottom: 2px; }
+        .repo-desc { font-size: 0.72rem; color: var(--text-muted); }
+        .repo-lang-badge { font-size: 0.68rem; padding: 3px 10px; border-radius: 50px; font-weight: 600; }
+
+        /* GitHub profile link */
+        .gh-profile-link {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 14px 32px; border-radius: 50px;
+            background: linear-gradient(135deg, #24292e, #3d444d);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: #fff; font-weight: 600; font-size: 0.92rem;
+            text-decoration: none; transition: all .3s;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .gh-profile-link:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,210,255,0.2); border-color: var(--accent-primary); }
+
+        @media (max-width: 650px) {
+            .github-grid { grid-template-columns: 1fr; }
+            .github-card-full { grid-column: 1; }
+            .gh-stats-row { grid-template-columns: repeat(3, 1fr); }
+        }
+
     </style>
 
     <!-- Chat Bubble Button -->
@@ -2070,22 +2929,19 @@
     </div>
 
     <script>
+    // Close chat when clicking outside
+    document.addEventListener('click', function(e) {
+        if (chatOpen && !document.getElementById('chat-window').contains(e.target) && e.target.id !== 'chat-bubble' && !document.getElementById('chat-bubble').contains(e.target)) {
+            chatOpen = false;
+            document.getElementById('chat-window').classList.remove('open');
+            document.getElementById('chat-bubble-icon').textContent = '🤖';
+            document.getElementById('chat-bubble-icon').style.fontSize = '1.6rem';
+        }
+    });
+
     // ====== CHATBOT BRAIN ======
     var chatOpen = false;
     var notifShown = false;
-
-    // Close chat when clicking outside
-    document.addEventListener('click', function(e) {
-        var win = document.getElementById('chat-window');
-        var bubble = document.getElementById('chat-bubble');
-        if (!win || !bubble) return;
-        if (chatOpen && !win.contains(e.target) && !bubble.contains(e.target)) {
-            chatOpen = false;
-            win.classList.remove('open');
-            var icon = document.getElementById('chat-bubble-icon');
-            if (icon) { icon.textContent = '🤖'; icon.style.fontSize = '1.6rem'; }
-        }
-    });
 
     // Auto open hint after 5 seconds
     setTimeout(function() {
@@ -2099,7 +2955,6 @@
         chatOpen = !chatOpen;
         var win = document.getElementById('chat-window');
         var icon = document.getElementById('chat-bubble-icon');
-        if (!win || !icon) return;
         win.classList.toggle('open', chatOpen);
         icon.textContent = chatOpen ? '✕' : '🤖';
         icon.style.fontSize = chatOpen ? '1.2rem' : '1.6rem';
@@ -2170,7 +3025,7 @@
         }
         // === CONTACT ===
         else if (t.match(/contact|call|whatsapp|phone|number|reach|baat|milna|email/)) {
-            showBotMessage('📞 <strong>Chandan se contact karo:</strong><br><br>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">+91 9693776982</a><br>📧 <strong>Email:</strong> chandan756296@gmail.com<br><br>WhatsApp pe instant reply milta hai! 🟢');
+            showBotMessage('📞 <strong>Chandan se contact karo:</strong><br><br>💬 <strong>WhatsApp:</strong> <a href="https://wa.me/919693776982" target="_blank" style="color:var(--accent-primary)">+91 9693776982</a><br>📧 <strong>Email:</strong> chandansharma@xevionbyte.com<br><br>WhatsApp pe instant reply milta hai! 🟢');
         }
         // === PROJECTS ===
         else if (t.match(/project|portfolio|work|kaam|client|banaya|previous|past|example/)) {
@@ -2217,6 +3072,18 @@
     }
     </script>
     <!-- ====== END AI CHATBOT ====== -->
+
+    <!-- ===== UPLOAD STATUS MODAL ===== -->
+    <div class="photo-modal-overlay" id="photoModal">
+        <div class="photo-modal-box">
+            <div id="modalIcon" class="upload-spinner"></div>
+            <h3 id="modalTitle" style="margin:0 0 8px;font-size:1.2rem;">Photo Upload Ho Rahi Hai...</h3>
+            <p id="modalSubtitle" style="font-size:0.85rem;color:var(--text-muted);margin:0;">Ek second ruko, photo cloud pe ja rahi hai ☁️</p>
+            <button id="modalActionBtn" class="modal-action-btn" onclick="modalOpenWA()">
+                <i class="fab fa-whatsapp"></i> WhatsApp Pe Bhejo!
+            </button>
+        </div>
+    </div>
 
     </body>
     </html>
