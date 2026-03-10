@@ -2699,48 +2699,169 @@
         setTimeout(runStep, 300);
     })();
 
-    // ===== BACKGROUND MUSIC =====
+    // ===== BACKGROUND MUSIC — MP3 File + Web Audio Fallback =====
     (function() {
-        var TRACKS = [
-            'https://cdn.pixabay.com/audio/2022/10/25/audio_946b10e6b0.mp3',
-            'https://cdn.pixabay.com/audio/2022/03/15/audio_8ea6feeba2.mp3',
-            'https://cdn.pixabay.com/audio/2023/06/12/audio_d80c56dc89.mp3'
+        // Pehle MP3 file try karta hai (same folder mein music.mp3 honi chahiye)
+        // Agar nahi mili toh Web Audio API se generate karega
+        var audio      = null;
+        var isPlaying  = false;
+        var mp3Loaded  = false;
+        var mp3Failed  = false;
+
+        // === Web Audio fallback vars ===
+        var ctx = null, master = null, reverb = null;
+        var activeOsc = [], scheduleTimer = null;
+        var chordIdx = 0;
+        var PROG = [
+            { bass: 65.41,  notes: [261.63, 329.63, 392.00, 493.88] },
+            { bass: 55.00,  notes: [220.00, 261.63, 329.63, 440.00] },
+            { bass: 43.65,  notes: [174.61, 220.00, 261.63, 349.23] },
+            { bass: 48.99,  notes: [196.00, 246.94, 293.66, 392.00] },
         ];
-        var audio = new Audio();
-        audio.loop   = true;
-        audio.volume = 0.18;
-        var trackIdx = 0;
-        var isPlaying = false;
-        audio.src = TRACKS[0];
+        var BASE_NOTES = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+        var BPM = 72, BEAT = 60 / BPM, CHORD_BEATS = 8;
+
+        // Try loading MP3 first
+        function initMP3() {
+            if (audio) return;
+            audio = new Audio('music.mp3');
+            audio.loop   = true;
+            audio.volume = 0.35;
+            audio.preload = 'auto';
+            audio.addEventListener('canplaythrough', function() { mp3Loaded = true; }, { once: true });
+            audio.addEventListener('error', function() { mp3Failed = true; audio = null; }, { once: true });
+            audio.load();
+        }
+        initMP3();
+
+        // === Web Audio helpers ===
+        function initCtx() {
+            if (ctx) return;
+            ctx    = new (window.AudioContext || window.webkitAudioContext)();
+            master = ctx.createGain();
+            master.gain.setValueAtTime(0, ctx.currentTime);
+            var reverbGain = ctx.createGain();
+            reverbGain.gain.value = 0.3;
+            reverb = ctx.createConvolver();
+            var len = ctx.sampleRate * 2.8, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+            for (var ch = 0; ch < 2; ch++) {
+                var d = buf.getChannelData(ch);
+                for (var i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 2.2);
+            }
+            reverb.buffer = buf;
+            master.connect(reverbGain); reverbGain.connect(reverb); reverb.connect(ctx.destination);
+            master.connect(ctx.destination);
+        }
+        function makeNote(freq, type, vol, t0, dur, det) {
+            var osc = ctx.createOscillator(), g = ctx.createGain(), lpf = ctx.createBiquadFilter();
+            lpf.type = 'lowpass'; lpf.frequency.value = 1600;
+            osc.type = type; osc.frequency.value = freq;
+            if (det) osc.detune.value = det;
+            g.gain.setValueAtTime(0, t0);
+            g.gain.linearRampToValueAtTime(vol, t0 + 0.1);
+            g.gain.setValueAtTime(vol, t0 + dur - dur*0.65);
+            g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+            osc.connect(lpf); lpf.connect(g); g.connect(master);
+            osc.start(t0); osc.stop(t0 + dur + 0.05);
+            activeOsc.push(osc);
+        }
+        function makeDrum(type, t) {
+            var buf = ctx.createBuffer(1, ctx.sampleRate*0.25, ctx.sampleRate);
+            var d = buf.getChannelData(0);
+            for (var i = 0; i < d.length; i++) d[i] = (Math.random()*2-1) * Math.pow(1-i/d.length, type==='kick'?6:12);
+            var src = ctx.createBufferSource(), filt = ctx.createBiquadFilter(), g = ctx.createGain();
+            if (type==='kick')  { filt.type='lowpass';  filt.frequency.value=110; g.gain.setValueAtTime(0.11,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.22); }
+            if (type==='snare') { filt.type='bandpass'; filt.frequency.value=900; filt.Q.value=0.5; g.gain.setValueAtTime(0.035,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.09); }
+            if (type==='hat')   { filt.type='highpass'; filt.frequency.value=9000; g.gain.setValueAtTime(0.014,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.04); }
+            src.buffer=buf; src.connect(filt); filt.connect(g); g.connect(master); src.start(t);
+        }
+        function scheduleBar() {
+            if (!isPlaying || mp3Loaded) return;
+            var now = ctx.currentTime, prog = PROG[chordIdx % PROG.length];
+            var dur = BEAT * CHORD_BEATS * 0.98;
+            prog.notes.forEach(function(f) {
+                makeNote(f, 'sine', 0.05, now, dur, 0);
+                makeNote(f, 'triangle', 0.02, now, dur, 5);
+                makeNote(f*2, 'sine', 0.012, now, dur, -3);
+            });
+            makeNote(prog.bass, 'sine', 0.08, now, dur, 0);
+            makeNote(prog.bass*2, 'triangle', 0.035, now, dur, 2);
+            for (var b = 0; b < CHORD_BEATS; b++) {
+                var t = now + b * BEAT;
+                if (b===0||b===4) makeDrum('kick', t);
+                if (b===2||b===6) makeDrum('snare', t);
+                makeDrum('hat', t); makeDrum('hat', t+BEAT*0.5);
+            }
+            [0.5,1.3,2.2,3.1,4.3,5.0,6.2,7.1].forEach(function(off) {
+                if (Math.random()>0.35) makeNote(BASE_NOTES[Math.floor(Math.random()*BASE_NOTES.length)], 'sine', 0.035, now+off*BEAT, 0.4+Math.random()*0.25, 0);
+            });
+            chordIdx++;
+            scheduleTimer = setTimeout(scheduleBar, BEAT*CHORD_BEATS*1000 - 80);
+        }
+
+        function setUI(playing) {
+            var btn = document.getElementById('music-btn');
+            var icon = document.getElementById('music-icon');
+            var tip  = document.getElementById('musicTooltip');
+            if (playing) {
+                if (btn) btn.classList.add('playing');
+                if (icon) icon.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="2" y="3" width="4" height="10" rx="1" fill="#00d2ff"/><rect x="10" y="3" width="4" height="10" rx="1" fill="#00d2ff"/></svg>';
+                if (tip)  tip.textContent = 'Pause music';
+            } else {
+                if (btn) btn.classList.remove('playing');
+                if (icon) icon.textContent = '🎵';
+                if (tip)  tip.textContent = 'Play lo-fi music';
+            }
+        }
 
         window.toggleMusic = function() {
-            var btn     = document.getElementById('music-btn');
-            var icon    = document.getElementById('music-icon');
-            var tooltip = document.getElementById('musicTooltip');
             if (isPlaying) {
-                audio.pause();
+                // Pause
+                if (audio && !mp3Failed) {
+                    audio.pause();
+                } else if (ctx && master) {
+                    master.gain.cancelScheduledValues(ctx.currentTime);
+                    master.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.8);
+                    setTimeout(function() {
+                        clearTimeout(scheduleTimer);
+                        activeOsc.forEach(function(o){ try{o.stop();}catch(e){} });
+                        activeOsc = [];
+                    }, 900);
+                }
                 isPlaying = false;
-                if (btn)     btn.classList.remove('playing');
-                if (icon)    icon.textContent = '🎵';
-                if (tooltip) tooltip.textContent = 'Play lo-fi music';
+                setUI(false);
             } else {
-                audio.play().catch(function() {
-                    trackIdx = (trackIdx + 1) % TRACKS.length;
-                    audio.src = TRACKS[trackIdx];
-                    audio.play().catch(function(){});
-                });
+                // Play
                 isPlaying = true;
-                if (btn)     btn.classList.add('playing');
-                if (icon)    icon.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="2" y="3" width="4" height="10" rx="1" fill="#00d2ff"/><rect x="10" y="3" width="4" height="10" rx="1" fill="#00d2ff"/></svg>';
-                if (tooltip) tooltip.textContent = 'Pause music';
+                setUI(true);
+
+                if (!mp3Failed && audio) {
+                    // Try MP3
+                    var p = audio.play();
+                    if (p) {
+                        p.then(function() {
+                            mp3Loaded = true;
+                        }).catch(function() {
+                            // MP3 failed (file not found etc) — use Web Audio
+                            mp3Failed = true; audio = null;
+                            startWebAudio();
+                        });
+                    }
+                } else {
+                    startWebAudio();
+                }
             }
         };
 
-        audio.addEventListener('ended', function() {
-            trackIdx = (trackIdx + 1) % TRACKS.length;
-            audio.src = TRACKS[trackIdx];
-            if (isPlaying) audio.play().catch(function(){});
-        });
+        function startWebAudio() {
+            initCtx();
+            if (ctx.state === 'suspended') ctx.resume();
+            chordIdx = 0;
+            scheduleBar();
+            master.gain.cancelScheduledValues(ctx.currentTime);
+            master.gain.setValueAtTime(0, ctx.currentTime);
+            master.gain.linearRampToValueAtTime(0.7, ctx.currentTime + 1.6);
+        }
     })();
 
     // 1. SCROLL PROGRESS BAR
