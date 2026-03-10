@@ -773,8 +773,154 @@
             .form-btns { flex-direction:column; }
         }
     </style>
+
+    <style>
+    /* ===== PRELOADER ===== */
+    #preloader {
+        position: fixed; inset: 0; z-index: 999999;
+        background: #020617;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 0;
+        transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #preloader.hide {
+        opacity: 0; transform: scale(1.05); pointer-events: none;
+    }
+    .pre-logo {
+        font-size: clamp(2.2rem, 6vw, 3.8rem);
+        font-weight: 800; letter-spacing: 4px;
+        background: linear-gradient(135deg, #00d2ff, #8a2be2);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        animation: pre-logo-in 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        opacity: 0;
+    }
+    .pre-logo span { color: #8a2be2; -webkit-text-fill-color: #8a2be2; }
+    @keyframes pre-logo-in {
+        from { opacity:0; transform: translateY(24px) scale(0.9); }
+        to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    .pre-tagline {
+        font-size: 0.78rem; letter-spacing: 3px; text-transform: uppercase;
+        color: rgba(255,255,255,0.35); margin-top: 6px;
+        animation: pre-logo-in 0.8s 0.2s forwards; opacity: 0;
+    }
+    .pre-bar-wrap {
+        width: min(320px, 70vw); height: 3px;
+        background: rgba(255,255,255,0.07); border-radius: 2px;
+        margin-top: 36px; overflow: hidden;
+        animation: pre-logo-in 0.4s 0.4s forwards; opacity: 0;
+    }
+    .pre-bar-fill {
+        height: 100%; width: 0%;
+        background: linear-gradient(90deg, #00d2ff, #8a2be2);
+        border-radius: 2px;
+        box-shadow: 0 0 12px #00d2ff;
+        transition: width 0.08s linear;
+    }
+    .pre-status {
+        font-size: 0.7rem; color: rgba(255,255,255,0.25);
+        letter-spacing: 2px; margin-top: 14px;
+        animation: pre-logo-in 0.4s 0.5s forwards; opacity: 0;
+        min-height: 1em;
+    }
+    .pre-particles {
+        position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+    }
+    .pre-p {
+        position: absolute; border-radius: 50%;
+        background: radial-gradient(circle, #00d2ff, transparent);
+        animation: pre-particle-float linear infinite;
+        opacity: 0;
+    }
+    @keyframes pre-particle-float {
+        0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+        10%  { opacity: 0.4; }
+        90%  { opacity: 0.2; }
+        100% { transform: translateY(-20px) scale(1); opacity: 0; }
+    }
+
+    /* ===== MUSIC BUTTON ===== */
+    #music-btn {
+        position: fixed; bottom: 24px; left: 24px; z-index: 9990;
+        width: 48px; height: 48px; border-radius: 50%;
+        background: rgba(15,23,42,0.9);
+        border: 1px solid rgba(0,210,255,0.3);
+        color: var(--accent-primary); font-size: 1.2rem;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        transition: all 0.3s;
+    }
+    #music-btn:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 20px rgba(0,210,255,0.3);
+        transform: scale(1.1);
+    }
+    #music-btn.playing {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 24px rgba(0,210,255,0.4);
+        animation: music-pulse 2s ease-in-out infinite;
+    }
+    @keyframes music-pulse {
+        0%,100% { box-shadow: 0 0 16px rgba(0,210,255,0.3); }
+        50%      { box-shadow: 0 0 32px rgba(0,210,255,0.6), 0 0 60px rgba(138,43,226,0.2); }
+    }
+    .music-bars {
+        display: none; align-items: flex-end; gap: 2px; height: 16px;
+    }
+    .music-btn.playing .music-bars { display: flex; }
+    .music-bar {
+        width: 3px; border-radius: 2px;
+        background: var(--accent-primary);
+        animation: bar-dance 0.8s ease-in-out infinite alternate;
+    }
+    .music-bar:nth-child(1) { height: 6px;  animation-delay: 0s; }
+    .music-bar:nth-child(2) { height: 12px; animation-delay: 0.15s; }
+    .music-bar:nth-child(3) { height: 8px;  animation-delay: 0.3s; }
+    .music-bar:nth-child(4) { height: 14px; animation-delay: 0.1s; }
+    @keyframes bar-dance {
+        from { transform: scaleY(0.4); }
+        to   { transform: scaleY(1.2); }
+    }
+    .music-tooltip {
+        position: absolute; left: 58px; bottom: 50%;
+        transform: translateY(50%);
+        background: rgba(15,23,42,0.95);
+        border: 1px solid rgba(0,210,255,0.2);
+        color: rgba(255,255,255,0.8); font-size: 0.72rem;
+        padding: 5px 12px; border-radius: 8px;
+        white-space: nowrap; pointer-events: none;
+        opacity: 0; transition: opacity 0.2s;
+    }
+    #music-btn:hover .music-tooltip { opacity: 1; }
+    </style>
 </head>
 <body>
+
+    <!-- ===== PRELOADER ===== -->
+    <div id="preloader">
+        <div class="pre-particles" id="preParticles"></div>
+        <div class="pre-logo">XEVION <span>BYTE</span></div>
+        <div class="pre-tagline">Digital Architect</div>
+        <div class="pre-bar-wrap">
+            <div class="pre-bar-fill" id="preBar"></div>
+        </div>
+        <div class="pre-status" id="preStatus">Initializing...</div>
+    </div>
+
+    <!-- ===== MUSIC BUTTON ===== -->
+    <button id="music-btn" onclick="toggleMusic()" title="Background Music">
+        <span id="music-icon">🎵</span>
+        <div class="music-bars">
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+            <div class="music-bar"></div>
+        </div>
+        <span class="music-tooltip" id="musicTooltip">Play lo-fi music</span>
+    </button>
+
 
     <!-- Scroll Progress Bar -->
     <div id="scroll-progress-bar"></div>
@@ -2505,6 +2651,97 @@
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeMobileMenu();
     });
+
+    // ===== PRELOADER =====
+    (function() {
+        var bar    = document.getElementById('preBar');
+        var status = document.getElementById('preStatus');
+        var loader = document.getElementById('preloader');
+        var steps  = [
+            { pct: 15,  txt: 'Loading assets...' },
+            { pct: 35,  txt: 'Initializing UI...' },
+            { pct: 58,  txt: 'Setting up experience...' },
+            { pct: 80,  txt: 'Almost there...' },
+            { pct: 100, txt: 'Welcome! 🚀' }
+        ];
+        var stepIdx = 0;
+
+        // Spawn floating particles
+        var pp = document.getElementById('preParticles');
+        if (pp) {
+            for (var p = 0; p < 18; p++) {
+                var dot = document.createElement('div');
+                dot.className = 'pre-p';
+                var size = 4 + Math.random() * 8;
+                dot.style.cssText = 'width:' + size + 'px;height:' + size + 'px;'
+                    + 'left:' + (Math.random() * 100) + '%;'
+                    + 'animation-duration:' + (4 + Math.random() * 6) + 's;'
+                    + 'animation-delay:' + (Math.random() * 4) + 's;'
+                    + (Math.random() > 0.5 ? 'background:radial-gradient(circle,#8a2be2,transparent);' : '');
+                pp.appendChild(dot);
+            }
+        }
+
+        function runStep() {
+            if (stepIdx >= steps.length) return;
+            var s = steps[stepIdx++];
+            if (bar)    bar.style.width = s.pct + '%';
+            if (status) status.textContent = s.txt;
+            if (stepIdx < steps.length) {
+                setTimeout(runStep, 220 + Math.random() * 180);
+            } else {
+                setTimeout(function() {
+                    if (loader) loader.classList.add('hide');
+                    setTimeout(function() { if (loader) loader.style.display = 'none'; }, 750);
+                }, 400);
+            }
+        }
+        setTimeout(runStep, 300);
+    })();
+
+    // ===== BACKGROUND MUSIC =====
+    (function() {
+        var TRACKS = [
+            'https://cdn.pixabay.com/audio/2022/10/25/audio_946b10e6b0.mp3',
+            'https://cdn.pixabay.com/audio/2022/03/15/audio_8ea6feeba2.mp3',
+            'https://cdn.pixabay.com/audio/2023/06/12/audio_d80c56dc89.mp3'
+        ];
+        var audio = new Audio();
+        audio.loop   = true;
+        audio.volume = 0.18;
+        var trackIdx = 0;
+        var isPlaying = false;
+        audio.src = TRACKS[0];
+
+        window.toggleMusic = function() {
+            var btn     = document.getElementById('music-btn');
+            var icon    = document.getElementById('music-icon');
+            var tooltip = document.getElementById('musicTooltip');
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                if (btn)     btn.classList.remove('playing');
+                if (icon)    icon.textContent = '🎵';
+                if (tooltip) tooltip.textContent = 'Play lo-fi music';
+            } else {
+                audio.play().catch(function() {
+                    trackIdx = (trackIdx + 1) % TRACKS.length;
+                    audio.src = TRACKS[trackIdx];
+                    audio.play().catch(function(){});
+                });
+                isPlaying = true;
+                if (btn)     btn.classList.add('playing');
+                if (icon)    icon.innerHTML = '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:block"><rect x="2" y="3" width="4" height="10" rx="1" fill="#00d2ff"/><rect x="10" y="3" width="4" height="10" rx="1" fill="#00d2ff"/></svg>';
+                if (tooltip) tooltip.textContent = 'Pause music';
+            }
+        };
+
+        audio.addEventListener('ended', function() {
+            trackIdx = (trackIdx + 1) % TRACKS.length;
+            audio.src = TRACKS[trackIdx];
+            if (isPlaying) audio.play().catch(function(){});
+        });
+    })();
 
     // 1. SCROLL PROGRESS BAR
     window.addEventListener('scroll', function() {
